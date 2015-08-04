@@ -7,6 +7,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import AppStates.InGameAppState;
+import org.dyn4j.dynamics.World;
 
 /**
  * test
@@ -21,14 +23,19 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        Box b = new Box(1, 1, 1);
-        Geometry geom = new Geometry("Box", b);
-
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
-        geom.setMaterial(mat);
-
-        rootNode.attachChild(geom);
+       
+        //setting fly camera
+         cam.setLocation(new Vector3f(0.0f, 15.0f, 10.0f));
+        cam.lookAt(new Vector3f(0.0f, 0.0f, 0.0f), Vector3f.UNIT_Y);
+        flyCam.setEnabled(true);
+        flyCam.setMoveSpeed(5.0f);
+        
+        //Create and intialize InGameAppState
+        InGameAppState state = new InGameAppState();
+        state.setNode(rootNode);
+        stateManager.attach(state);
+        
+        
     }
 
     @Override
