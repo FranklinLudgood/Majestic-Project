@@ -8,7 +8,9 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import AppStates.InGameAppState;
+import com.jme3.input.controls.TouchTrigger;
 import org.dyn4j.dynamics.World;
+import GameInput.GameInputManager;
 
 /**
  * test
@@ -23,6 +25,11 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
+        
+        //Adding touch into to Jmonkey
+        inputManager.addMapping("Touch", new TouchTrigger(0));
+        inputManager.addListener(GameInputManager.GetInstance(), new String[]{"Touch"});
+
        
         //setting fly camera
          cam.setLocation(new Vector3f(0.0f, 15.0f, 10.0f));

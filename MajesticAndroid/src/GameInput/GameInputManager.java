@@ -4,11 +4,12 @@
  * Date Created: 08-04-2015
  *******************************************************/
 package GameInput;
+import com.jme3.input.controls.TouchListener;
 import com.jme3.input.event.TouchEvent;
 import java.util.List;
 import java.util.ArrayList;
 
-public class GameInputManager {
+public class GameInputManager implements TouchListener {
     
     private static GameInputManager m_AndroidInputManager;
     
@@ -57,6 +58,11 @@ public class GameInputManager {
         for(int i = 0; i < m_OrientationListenerList.size(); ++i){
             m_OrientationListenerList.get(i).onChangedOrientation(EulerX, EulerY, EulerZ);
         }
+    }
+    
+    @Override
+    public void onTouch(String name, TouchEvent event, float tpf) {
+      SendTouchEvent(event, tpf);
     }
     
 }
