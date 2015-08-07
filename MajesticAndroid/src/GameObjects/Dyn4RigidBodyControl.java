@@ -21,10 +21,10 @@ import org.dyn4j.dynamics.Body;
 public class Dyn4RigidBodyControl implements Control {
     
    
+    protected Body m_2Dbody;
+    protected Spatial m_3dSpatial;
+    protected Quaternion m_Orientation;
     
-    private Body m_2Dbody;
-    private Spatial m_3dSpatial;
-    private Quaternion m_Orientation;
     
     public Dyn4RigidBodyControl(){
         m_2Dbody = null;
