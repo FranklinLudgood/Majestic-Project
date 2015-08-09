@@ -9,12 +9,19 @@ import GameInput.GameTouchListner;
 import com.jme3.input.event.TouchEvent;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
+//import com.jme3.math.Vector3f;
 
 /**
  *
  * TODO:Finish this class
+ * Hax:
  */
 public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientationListener, GameTouchListner {
+    
+    
+    public PlayerControl(){
+        
+    }
 
      @Override
     public void onChangedOrientation(float EulerX, float EulerY, float EulerZ) {
@@ -30,5 +37,12 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
      public void render(RenderManager rm, ViewPort vp) {
         
     }
+      
+      @Override
+    public void update(float tpf) {
+      super.update(tpf);
+      
+      
+      }  
     
 }
