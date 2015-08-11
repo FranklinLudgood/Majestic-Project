@@ -53,6 +53,8 @@ public class Dyn4RigidBodyControl implements Control {
         m_2Dbody = body;
     }
     
+    public Body getBody(){return m_2Dbody;}
+    
     public void setControl(Body body, Spatial spatial){
     
         m_2Dbody = body;

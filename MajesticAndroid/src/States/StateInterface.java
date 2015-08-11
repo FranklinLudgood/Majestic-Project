@@ -14,8 +14,8 @@ public interface StateInterface {
     public void EnterState(PlayerControl control, StateInterface exitState);
     public void ExitState(PlayerControl control, StateInterface enterState);
     public StateInterface Update(PlayerControl control, float tpf);
-    public void onChangedOrientation(float EulerX, float EulerY, float EulerZ);
-    public void onTouch(TouchEvent event, float tpf);
+    public void onChangedOrientation(PlayerControl control, float EulerX, float EulerY, float EulerZ);
+    public void onTouch(PlayerControl control, TouchEvent event, float tpf);
     
     
 }

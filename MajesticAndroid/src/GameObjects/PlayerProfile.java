@@ -32,6 +32,8 @@ public class PlayerProfile {
     public float win_lose_ratio;
     public float tilt_coefficient;
     public float stop_coefficient;
+    public float isZero;
+    public float speed;
     
     
     private PlayerProfile(){
