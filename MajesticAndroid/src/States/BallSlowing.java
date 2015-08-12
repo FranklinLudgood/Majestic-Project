@@ -1,5 +1,5 @@
 /*******************************************************
- * File Name: BallRolling.java
+ * File Name: BallSlowing.java
  * Author: Franklin Ludgood
  * Date Created: 08-10-2015
  *******************************************************/
@@ -7,34 +7,28 @@ package States;
 
 import GameObjects.PlayerControl;
 import GameObjects.PlayerProfile;
+import static States.BallRolling.jumpScale;
 import com.jme3.input.event.TouchEvent;
-import java.lang.Math.*;
-import org.dyn4j.geometry.Vector2;
 import com.jme3.math.Vector2f;
+import org.dyn4j.geometry.Vector2;
 
 
-public class BallRolling implements StateInterface {
+public class BallSlowing implements StateInterface {
     
-    private static BallRolling m_state;
-    public static final float scale = 10.0f;
-    public static final float maxSpeed = 40.0f;
-    public static final float jumpScale = 60.0f;
+    private static BallSlowing m_state;
+    private BallSlowing(){}
     
-    private BallRolling(){ }
-    
-    public static BallRolling GetInstance(){
+    public static BallSlowing GetInstance(){
         
         if(m_state == null)
-            m_state = new BallRolling();
-        
+            m_state = new BallSlowing();
+    
         return m_state;
     }
-    
 
     @Override
     public void EnterState(PlayerControl control, StateInterface exitState) {
-        float yRot = control.getDeviceOrientation().y;
-        control.getBody().setLinearVelocity(new Vector2(yRot * scale, 0.0));  
+        
     }
 
     @Override
@@ -45,20 +39,20 @@ public class BallRolling implements StateInterface {
     @Override
     public StateInterface Update(PlayerControl control, float tpf) {
         
-         float speed = (float) control.getBody().getLinearVelocity().getMagnitude();
-         float yRot = control.getDeviceOrientation().y;
-         control.getBody().applyImpulse(new Vector2(yRot * scale, 0.0));
-
-         
-         PlayerProfile profile = PlayerProfile.GetInstance();
-         if(profile.tilt_coefficient < Math.abs(yRot))
-             return BallSlowing.GetInstance();
-         
-          if(Math.abs(speed) >= maxSpeed){
-                    control.getBody().getLinearVelocity().normalize();
-                    control.getBody().getLinearVelocity().setMagnitude(maxSpeed);
-                }
-         
+        float yRot = control.getDeviceOrientation().y;
+        PlayerProfile profile = PlayerProfile.GetInstance();
+        
+       Vector2 drag =  new Vector2(control.getBody().getLinearVelocity());
+       drag.normalize();
+       drag.multiply(-1.0 * profile.stop_coefficient);
+       control.getBody().applyForce(drag);
+       
+       if(Math.abs(control.getBody().getLinearVelocity().getMagnitude()) < profile.isZero)
+           control.getBody().setLinearVelocity(0.0, 0.0);
+        
+        
+        if(profile.tilt_coefficient < Math.abs(yRot))
+             return BallRolling.GetInstance();
         
         if(control.getTouchedOccured() == true && Math.abs(control.getJumpVector().length()) > profile.isZero){
             Vector2f jump = control.getJumpVector();
@@ -68,24 +62,24 @@ public class BallRolling implements StateInterface {
             return BallFalling.getState();
         }
         
-         if(Math.abs(control.getJumpVector().length()) < profile.isZero)
+        if(Math.abs(control.getJumpVector().length()) < profile.isZero)
             return BallFalling.getState();
+        
+        
         
         control.setTouchedOccured(false);
         return null;
     }
 
-     @Override
+    @Override
     public void onChangedOrientation(PlayerControl control, float EulerX, float EulerY, float EulerZ) {
         control.setDeviceOrientation(EulerX, EulerY, EulerZ);
     }
 
-     @Override
+    @Override
     public void onTouch(PlayerControl control, TouchEvent event, float tpf) {
-        
-         if(TouchEvent.Type.TAP == event.getType())
+       if(TouchEvent.Type.TAP == event.getType())
              control.setTouchedOccured(true);
-                 
     }
     
 }

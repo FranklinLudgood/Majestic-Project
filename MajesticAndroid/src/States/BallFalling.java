@@ -1,11 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************
+ * File Name: BallFalling.java
+ * Author: Franklin Ludgood
+ * Date Created: 08-11-2015
+ *******************************************************/
 package States;
 
 import GameObjects.PlayerControl;
 import com.jme3.input.event.TouchEvent;
+import com.jme3.math.Vector2f;
+import GameObjects.PlayerProfile;
+import java.lang.Math.*;
 
 /**
  *
@@ -24,25 +28,34 @@ public class BallFalling implements StateInterface {
         return m_state;
     }
     
-
+    @Override
     public void EnterState(PlayerControl control, StateInterface exitState) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         control.setTouchedOccured(false);
+         control.setJumpNormal(Vector2f.ZERO);     
     }
 
+    @Override
     public void ExitState(PlayerControl control, StateInterface enterState) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         
     }
 
+    @Override
     public StateInterface Update(PlayerControl control, float tpf) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         
+        if(Math.abs(control.getJumpVector().length()) > PlayerProfile.GetInstance().isZero)
+            return BallSlowing.GetInstance();
+        
+        return null;
     }
 
-    public void onChangedOrientation(float EulerX, float EulerY, float EulerZ) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Override
+    public void onChangedOrientation(PlayerControl control, float EulerX, float EulerY, float EulerZ) {
+        control.setDeviceOrientation(EulerX, EulerY, EulerZ);
     }
 
-    public void onTouch(TouchEvent event, float tpf) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Override
+    public void onTouch(PlayerControl control, TouchEvent event, float tpf) {
+        
     }
     
 }
