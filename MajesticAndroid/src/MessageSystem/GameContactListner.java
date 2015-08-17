@@ -20,7 +20,7 @@ public class GameContactListner implements ContactListener {
 
     @Override
     public void sensed(ContactPoint point) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         
     }
 
     @Override
@@ -85,22 +85,26 @@ public class GameContactListner implements ContactListener {
         
         switch(type){
             case BEGIN:
+                //TODO: add sound for collision
                 if(collision1 != null)
                     collision1.beginCollisionEvent(event1);
                 
                 if(collision2 != null)
                     collision2.beginCollisionEvent(event2);
+                
                 break;
                 
             case PERSIST:
                 break;
                 
             case END:
+                
                 if(collision1 != null)
                     collision1.endCollisionEvent(event1);
                 
                 if(collision2 != null)
                     collision2.endCollisionEvent(event2);
+                
                 break;
         }
     }

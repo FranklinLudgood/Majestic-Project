@@ -8,7 +8,9 @@ package GameObjects;
 
 public interface BaseGameEntity {
     
-    public int getObjectType();
+    public enum ObjectType {PLAYER, BENIGN, YELLOW, BLUE,}
+    
+    public ObjectType getObjectType();
     public int getObjectID();
     String getObjectName();
     

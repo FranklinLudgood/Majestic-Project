@@ -21,6 +21,7 @@ import org.dyn4j.dynamics.Settings;
 import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.Vector2;
 import GameObjects.Dyn4RigidBodyControl;
+import MessageSystem.GameContactListner;
 import Utils.CreateBodyFixture;
 import com.jme3.math.ColorRGBA;
 
@@ -77,6 +78,9 @@ public class InGameAppState extends AbstractAppState{
       
       m_2Dworld.setGravity(new Vector2(0.0, -10.0));
       
+      GameContactListner listner = new GameContactListner();
+      m_2Dworld.addListener(listner);
+      
       InitPhyisics2D();
        
     }
@@ -84,11 +88,15 @@ public class InGameAppState extends AbstractAppState{
     
     private void InitPhyisics2D() {
     
-         Box floorBox = new Box(new Vector3f(-15.0f, -0.5f, -1.5f), new Vector3f(15.0f, 0.5f, 1.5f));
+        
+        //Setting up floor.
+        Box floorBox = new Box(new Vector3f(-15.0f, -0.5f, -1.5f), new Vector3f(15.0f, 0.5f, 1.5f));
         Geometry floor = new Geometry("floor", floorBox);
-       
+        
+        
         Material floorMat =  new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         floorMat.setColor("Color", ColorRGBA.Blue);
+        
         
         floor.setMaterial(floorMat);
         BodyFixture floorFixuture =  CreateBodyFixture.createBodyFixtureFromSpatial(floorBox, Vector2f.ZERO, 0.0f);
@@ -98,8 +106,57 @@ public class InGameAppState extends AbstractAppState{
         Dyn4RigidBodyControl floorControl = new Dyn4RigidBodyControl(floor, floor2D);
         floor.addControl(floorControl);
         
+        //Adding sides to the game field.
+        Box sideBox = new Box(new Vector3f(-.5f ,-15.0f  , -1.5f), new Vector3f(.5f,  15.0f, 1.5f));
+        Material borderMat =  new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        borderMat.setColor("Color", ColorRGBA.Green);
         
-        Material ballMat = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        Geometry leftBox = new Geometry("LeftBorder", sideBox);
+        leftBox.setMaterial(borderMat);
+        BodyFixture leftFixture = CreateBodyFixture.createBodyFixtureFromSpatial(sideBox, 
+        Vector2f.ZERO, 0.0f);
+        leftBox.getLocalTransform().setTranslation(-15.5f, 0.0f, 0.0f);
+        Body leftBox2D = new Body();
+        leftBox2D.getTransform().setTranslation(-15.5, 0.0);
+        leftBox2D.addFixture(leftFixture);
+        leftBox2D.setMass(Mass.Type.INFINITE);
+        Dyn4RigidBodyControl leftControl = new Dyn4RigidBodyControl(leftBox, leftBox2D);
+        leftBox.addControl(leftControl);
+         
+         
+        Geometry rightBox = new Geometry("RightBorder", sideBox);
+        rightBox.setMaterial(borderMat);
+        rightBox.getLocalTransform().setTranslation(15.5f, 0.0f, 0.0f);
+        BodyFixture rightFixture = CreateBodyFixture.createBodyFixtureFromSpatial(sideBox, 
+        Vector2f.ZERO, 0.0f);
+        Body rightBox2D = new Body();
+        rightBox2D.getTransform().setTranslation(15.5, 0.0);
+        rightBox2D.addFixture(leftFixture);
+        rightBox2D.setMass(Mass.Type.INFINITE);
+        Dyn4RigidBodyControl rightControl = new Dyn4RigidBodyControl(rightBox, rightBox2D);
+        rightBox.addControl(rightControl);
+        
+        
+        m_SceneNode.attachChild(leftBox);
+        m_SceneNode.attachChild(rightBox);
+        m_SceneNode.attachChild(floor);
+       
+        
+        m_2Dworld.addBody(floor2D);
+        m_2Dworld.addBody(leftBox2D);
+        m_2Dworld.addBody(rightBox2D);
+        
+        setWorld();
+               
+    }
+    
+    private void setPlayer(){
+    
+    }
+    
+    private void setWorld(){
+        
+         Material ballMat = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         ballMat.setColor("Color", ColorRGBA.Magenta);
         
         Material cylinderMat = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
@@ -107,9 +164,7 @@ public class InGameAppState extends AbstractAppState{
         
         Material boxMat =  new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         boxMat.setColor("Color", ColorRGBA.Yellow);
-        
     
-        
         //creating balls
         Sphere ball1Sphere = new Sphere(25, 25, 2.0f);
         Geometry ball1 = new Geometry("Ball1", ball1Sphere);
@@ -182,23 +237,20 @@ public class InGameAppState extends AbstractAppState{
         Dyn4RigidBodyControl box2Control = new Dyn4RigidBodyControl(box2, box2Body);
         box2.addControl(box2Control);
         
-        
-        m_SceneNode.attachChild(floor);
         m_SceneNode.attachChild(ball1);
         m_SceneNode.attachChild(ball2);
         m_SceneNode.attachChild(ball3);
         m_SceneNode.attachChild(box1);
         m_SceneNode.attachChild(box2);
         
-      
-        m_2Dworld.addBody(floor2D);
+        
         m_2Dworld.addBody(ball1Body);
         m_2Dworld.addBody(ball2Body);
         m_2Dworld.addBody(ball3Body);
         m_2Dworld.addBody(box1Body);
         m_2Dworld.addBody(box2Body);
-       
         
+    
     }
     
     

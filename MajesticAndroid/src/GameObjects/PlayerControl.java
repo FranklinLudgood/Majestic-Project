@@ -6,6 +6,8 @@
 package GameObjects;
 import GameInput.GameOrientationListener;
 import GameInput.GameTouchListner;
+import MessageSystem.CollisionEvent;
+import MessageSystem.CollisionResponse;
 import com.jme3.input.event.TouchEvent;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -14,12 +16,13 @@ import com.jme3.math.Vector2f;
 import States.StateInterface;
 
 
-/**
- * TODO:Finish this class
- * make sure state interface is intialized.
- * Hax:
- */
-public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientationListener, GameTouchListner {
+public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientationListener, GameTouchListner, BaseGameEntity, CollisionResponse {
+    
+    public static final String PlayerName = "PlayerControlBall";
+    public static final int PlayerID = -1;
+    public static final float scale = 10.0f;
+    public static final float maxSpeed = 40.0f;
+    public static final float jumpScale = 60.0f;
     
     private StateInterface m_state;
     private Vector3f m_DeviceOrientation;
@@ -94,5 +97,40 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
           m_state = newState;
       }
     }  
+
+     @Override
+    public ObjectType getObjectType() { 
+         return BaseGameEntity.ObjectType.PLAYER; 
+    }
+
+     @Override
+    public int getObjectID() {
+         return PlayerID;
+    }
+
+     @Override
+    public String getObjectName() {
+        return PlayerName;
+    }
+
+     @Override
+    public void beginCollisionEvent(CollisionEvent event) {
+         m_state.beginCollisionEvent(this, event);
+    }
+
+     @Override
+    public void persistCollisionEvent(CollisionEvent event) {
+        m_state.persistCollisionEvent(this, event);
+    }
+
+     @Override
+    public void endCollisionEvent(CollisionEvent event) {
+         m_state.endCollisionEvent(this, event);
+    }
+
+     @Override
+    public BaseGameEntity getEntityID() {
+         return this;
+    }
     
 }

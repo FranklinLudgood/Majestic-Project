@@ -5,10 +5,7 @@
  *******************************************************/
 package GameInput;
 
-/**
- *
- * @author Rashaan
- */
+
 public class GameInputFilter {
     
     public static float weightLowPass = 0.0f;

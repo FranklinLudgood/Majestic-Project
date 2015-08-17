@@ -14,6 +14,12 @@ public class PlayerProfile {
     
     private static PlayerProfile m_profile;
     
+    
+    //TODO: finish this function.
+    public static boolean LoadPrayerProfile(String filePath){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
     public static PlayerProfile GetInstance(){
         
         if(m_profile == null)
@@ -44,8 +50,8 @@ public class PlayerProfile {
         total_air_time = 0.0f; 
         challenges_completed = 0;
         win_lose_ratio = 0.0f;
-        tilt_coefficient = 0.0f;
-        stop_coefficient = 0.0f;
+        tilt_coefficient = 0.25f;
+        stop_coefficient = 0.5f;
     
     }
     

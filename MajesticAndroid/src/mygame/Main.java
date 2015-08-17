@@ -1,21 +1,18 @@
+/*******************************************************
+ * File Name: Main.java
+ * Author: Franklin Ludgood
+ * Date Created: 08-03-2015
+ ********************************************************/
 package mygame;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Box;
 import AppStates.InGameAppState;
 import com.jme3.input.controls.TouchTrigger;
-import org.dyn4j.dynamics.World;
 import GameInput.GameInputManager;
 
-/**
- * test
- * @author normenhansen
- */
+
 public class Main extends SimpleApplication {
 
     public static void main(String[] args) {
@@ -32,7 +29,7 @@ public class Main extends SimpleApplication {
 
        
         //setting fly camera
-         cam.setLocation(new Vector3f(0.0f, 15.0f, 10.0f));
+        cam.setLocation(new Vector3f(0.0f, 15.0f, 10.0f));
         cam.lookAt(new Vector3f(0.0f, 0.0f, 0.0f), Vector3f.UNIT_Y);
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(5.0f);
