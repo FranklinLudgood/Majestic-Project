@@ -45,7 +45,7 @@ public class BallRolling implements StateInterface {
     public StateInterface Update(PlayerControl control, float tpf) {
         
          float speed = (float) control.getBody().getLinearVelocity().getMagnitude();
-         float yRot = control.getDeviceOrientation().y;
+         float yRot = -1.0f * control.getDeviceOrientation().y;
          control.getBody().applyImpulse(new Vector2(yRot * control.scale, 0.0));
 
          

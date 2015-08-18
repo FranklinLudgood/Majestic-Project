@@ -43,7 +43,7 @@ public class BallFalling implements StateInterface {
     @Override
     public StateInterface Update(PlayerControl control, float tpf) {
          
-        if(Math.abs(control.getJumpVector().length()) > PlayerProfile.GetInstance().isZero)
+        if(Math.abs(control.getJumpVector().length()) > 0.0f)
             return BallSlowing.GetInstance();
         
         return null;
@@ -51,7 +51,7 @@ public class BallFalling implements StateInterface {
 
     @Override
     public void onChangedOrientation(PlayerControl control, float EulerX, float EulerY, float EulerZ) {
-        control.setDeviceOrientation(EulerX, EulerY, EulerZ);
+        control.setDeviceOrientation(0.0f, 0.0f, 0.0f);
     }
 
     @Override

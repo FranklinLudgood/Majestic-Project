@@ -14,6 +14,8 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.math.Vector3f;
 import com.jme3.math.Vector2f;
 import States.StateInterface;
+import com.jme3.scene.Spatial;
+import org.dyn4j.dynamics.Body;
 
 
 public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientationListener, GameTouchListner, BaseGameEntity, CollisionResponse {
@@ -34,6 +36,14 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
         m_jumpNormal = new Vector2f();
         m_jumpNormal.set(Vector2f.ZERO);
         m_TouchOccured = false;
+    }
+    
+    public PlayerControl(Spatial spatial, Body body){
+        super(spatial, body);
+         m_DeviceOrientation = new Vector3f();
+         m_jumpNormal = new Vector2f();
+         m_jumpNormal.set(Vector2f.ZERO);
+         m_TouchOccured = false;
     }
     
  

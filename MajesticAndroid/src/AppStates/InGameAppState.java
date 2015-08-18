@@ -4,6 +4,8 @@
  * Date Created: 08-03-2015
  ********************************************************/
 package AppStates;
+import GameInput.GameOrientationListener;
+import GameInput.GameTouchListner;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
@@ -21,6 +23,8 @@ import org.dyn4j.dynamics.Settings;
 import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.Vector2;
 import GameObjects.Dyn4RigidBodyControl;
+import States.BallSlowing;
+import GameObjects.PlayerControl;
 import MessageSystem.GameContactListner;
 import Utils.CreateBodyFixture;
 import com.jme3.math.ColorRGBA;
@@ -147,10 +151,31 @@ public class InGameAppState extends AbstractAppState{
         m_2Dworld.addBody(rightBox2D);
         
         setWorld();
+        setPlayer();
                
     }
     
     private void setPlayer(){
+        
+        Material playerMat = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        playerMat.setColor("Color", ColorRGBA.Red);
+        Sphere playerSphere = new Sphere(25, 25, 1.0f);
+        Geometry playerGeom = new Geometry("Player", playerSphere);
+        playerGeom.setMaterial(playerMat);
+        playerGeom.getLocalTransform().setTranslation(0.0f, 6.0f, 0.0f);
+        BodyFixture playerFix =  CreateBodyFixture.createBodyFixtureFromSpatial(playerSphere, 
+        Vector2f.ZERO);
+        Body playerBody = new Body();
+        playerBody.addFixture(playerFix);
+        playerBody.setMass();
+        playerBody.getTransform().setTranslation(0.0, 6.0);
+        PlayerControl control = new PlayerControl(playerGeom, playerBody);
+        control.setState(BallSlowing.GetInstance());
+        GameInput.GameInputManager.GetInstance().register((GameOrientationListener)control);
+        GameInput.GameInputManager.GetInstance().register((GameTouchListner)control);
+        playerGeom.addControl(control);
+        m_2Dworld.addBody(playerBody);
+        m_SceneNode.attachChild(playerGeom);
     
     }
     
