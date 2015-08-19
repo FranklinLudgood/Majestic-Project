@@ -64,11 +64,11 @@ public class BallRolling implements StateInterface {
             jump.multLocal(control.jumpScale);
             Vector2 impulse = new Vector2(jump.x, jump.y);
             control.getBody().applyImpulse(impulse);
-            return BallFalling.getState();
+            return BallFalling.GetInstance();
         }
         
          if(Math.abs(control.getJumpVector().length()) < profile.isZero)
-            return BallFalling.getState();
+            return BallFalling.GetInstance();
         
         control.setTouchedOccured(false);
         return null;
@@ -90,13 +90,13 @@ public class BallRolling implements StateInterface {
      @Override
     public void beginCollisionEvent(PlayerControl control, CollisionEvent event) {
          Vector2f normal = event.getCollisionNormal();
-         control.setJumpNormal(new Vector2f(normal));
+         control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));
     }
 
      @Override
     public void persistCollisionEvent(PlayerControl control, CollisionEvent event) {
          Vector2f normal = event.getCollisionNormal();
-         control.setJumpNormal(new Vector2f(normal));       
+         control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));       
     }
 
      @Override

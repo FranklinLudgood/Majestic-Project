@@ -21,7 +21,7 @@ public class BallFalling implements StateInterface {
     private static BallFalling m_state;
     private BallFalling(){}
     
-    public static BallFalling getState(){
+    public static BallFalling GetInstance(){
         
         if(m_state == null)
             m_state = new BallFalling();
@@ -29,17 +29,20 @@ public class BallFalling implements StateInterface {
         return m_state;
     }
     
+    
     @Override
     public void EnterState(PlayerControl control, StateInterface exitState) {
          control.setTouchedOccured(false);
          control.setJumpNormal(Vector2f.ZERO);     
     }
 
+    
     @Override
     public void ExitState(PlayerControl control, StateInterface enterState) {
          
     }
 
+    
     @Override
     public StateInterface Update(PlayerControl control, float tpf) {
          
@@ -51,7 +54,7 @@ public class BallFalling implements StateInterface {
 
     @Override
     public void onChangedOrientation(PlayerControl control, float EulerX, float EulerY, float EulerZ) {
-        control.setDeviceOrientation(0.0f, 0.0f, 0.0f);
+        
     }
 
     @Override
@@ -63,7 +66,7 @@ public class BallFalling implements StateInterface {
     public void beginCollisionEvent(PlayerControl control, CollisionEvent event) {
         
         Vector2f normal = event.getCollisionNormal();
-        control.setJumpNormal(new Vector2f(normal));
+        control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));
          
     }
 

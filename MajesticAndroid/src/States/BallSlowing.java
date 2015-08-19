@@ -39,35 +39,36 @@ public class BallSlowing implements StateInterface {
     @Override
     public StateInterface Update(PlayerControl control, float tpf) {
         
-        float yRot = control.getDeviceOrientation().y;
-        PlayerProfile profile = PlayerProfile.GetInstance();
+       float yRot = control.getDeviceOrientation().y;
+       PlayerProfile profile = PlayerProfile.GetInstance();
         
        Vector2 drag =  new Vector2(control.getBody().getLinearVelocity());
        drag.normalize();
        drag.multiply(-1.0 * profile.stop_coefficient);
-       control.getBody().applyForce(drag);
+       control.getBody().applyImpulse(drag);
        
-       if(Math.abs(control.getBody().getLinearVelocity().getMagnitude()) < profile.isZero)
-           control.getBody().setLinearVelocity(0.0, 0.0);
-        
+              
         
         if(profile.tilt_coefficient < Math.abs(yRot))
              return BallRolling.GetInstance();
+             
         
-        if(control.getTouchedOccured() == true && Math.abs(control.getJumpVector().length()) > profile.isZero){
-            Vector2f jump = control.getJumpVector();
-            jump.multLocal(control.jumpScale);
-            Vector2 impulse = new Vector2(jump.x, jump.y);
+        if(control.getTouchedOccured() == true && Math.abs(control.getJumpVector().length()) > 0.0f){
+            control.setTouchedOccured(false);
+            double jumpX = (double) control.getJumpVector().x;
+            double jumpY = (double) control.getJumpVector().y;
+            Vector2 impulse = new Vector2(jumpX, jumpY);
+            impulse.setMagnitude(control.jumpScale);
             control.getBody().applyImpulse(impulse);
-            return BallFalling.getState();
+            return BallFalling.GetInstance();
         }
         
-        if(Math.abs(control.getJumpVector().length()) < profile.isZero)
-            return BallFalling.getState();
+        if(Math.abs(control.getJumpVector().length()) <= profile.isZero)
+            return BallFalling.GetInstance();
         
         
         
-        control.setTouchedOccured(false);
+        
         return null;
     }
 
@@ -85,13 +86,14 @@ public class BallSlowing implements StateInterface {
      @Override
     public void beginCollisionEvent(PlayerControl control, CollisionEvent event) {
          Vector2f normal = event.getCollisionNormal();
-         control.setJumpNormal(new Vector2f(normal));
+         control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));
     }
 
      @Override
     public void persistCollisionEvent(PlayerControl control, CollisionEvent event) {
         Vector2f normal = event.getCollisionNormal();
-         control.setJumpNormal(new Vector2f(normal));
+        control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));
+         
     }
 
      @Override

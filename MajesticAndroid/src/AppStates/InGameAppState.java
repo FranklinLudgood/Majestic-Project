@@ -26,6 +26,7 @@ import GameObjects.Dyn4RigidBodyControl;
 import States.BallSlowing;
 import GameObjects.PlayerControl;
 import MessageSystem.GameContactListner;
+import States.BallFalling;
 import Utils.CreateBodyFixture;
 import com.jme3.math.ColorRGBA;
 
@@ -162,15 +163,17 @@ public class InGameAppState extends AbstractAppState{
         Sphere playerSphere = new Sphere(25, 25, 1.0f);
         Geometry playerGeom = new Geometry("Player", playerSphere);
         playerGeom.setMaterial(playerMat);
-        playerGeom.getLocalTransform().setTranslation(0.0f, 6.0f, 0.0f);
+        playerGeom.getLocalTransform().setTranslation(-10.0f, 3.0f, 0.0f);
         BodyFixture playerFix =  CreateBodyFixture.createBodyFixtureFromSpatial(playerSphere, 
         Vector2f.ZERO);
         Body playerBody = new Body();
         playerBody.addFixture(playerFix);
         playerBody.setMass();
-        playerBody.getTransform().setTranslation(0.0, 6.0);
+        playerBody.getTransform().setTranslation(-10.0, 3.0);
         PlayerControl control = new PlayerControl(playerGeom, playerBody);
-        control.setState(BallSlowing.GetInstance());
+        control.getBody().applyImpulse(new Vector2(50.0, 0.0));
+        control.setState(BallFalling.GetInstance());
+        control.getBody().setUserData(control);
         GameInput.GameInputManager.GetInstance().register((GameOrientationListener)control);
         GameInput.GameInputManager.GetInstance().register((GameTouchListner)control);
         playerGeom.addControl(control);

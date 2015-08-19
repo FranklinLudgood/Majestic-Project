@@ -95,6 +95,11 @@ public class GameContactListner implements ContactListener {
                 break;
                 
             case PERSIST:
+                   if(collision1 != null)
+                        collision1.persistCollisionEvent(event1); 
+                
+                   if(collision2 != null)
+                        collision2.persistCollisionEvent(event2);
                 break;
                 
             case END:

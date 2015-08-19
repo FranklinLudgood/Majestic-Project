@@ -52,6 +52,7 @@ public class PlayerProfile {
         win_lose_ratio = 0.0f;
         tilt_coefficient = 0.25f;
         stop_coefficient = 0.5f;
+        isZero = 0.05f;
     
     }
     

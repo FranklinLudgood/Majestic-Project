@@ -99,13 +99,13 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
      @Override
     public void update(float tpf) {
       super.update(tpf);
-      
       StateInterface newState = m_state.Update(this, tpf);
       if(newState != null){
           m_state.ExitState(this, newState);
           newState.EnterState(this, m_state);
           m_state = newState;
       }
+     
     }  
 
      @Override
