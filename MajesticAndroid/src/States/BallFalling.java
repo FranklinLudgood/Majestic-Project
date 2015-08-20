@@ -64,7 +64,7 @@ public class BallFalling implements StateInterface {
 
     @Override
     public void beginCollisionEvent(PlayerControl control, CollisionEvent event) {
-        
+  
         Vector2f normal = event.getCollisionNormal();
         control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));
          
@@ -72,12 +72,15 @@ public class BallFalling implements StateInterface {
 
     @Override
     public void persistCollisionEvent(PlayerControl control, CollisionEvent event) {
-         
+        
+         Vector2f normal = event.getCollisionNormal();
+        control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));
+        
     }
 
     @Override 
     public void endCollisionEvent(PlayerControl control, CollisionEvent event) {
-         
+            control.setJumpNormal(new Vector2f(Vector2f.ZERO));
     }
     
 }

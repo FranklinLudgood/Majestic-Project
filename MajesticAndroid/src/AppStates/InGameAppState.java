@@ -24,6 +24,7 @@ import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.Vector2;
 import GameObjects.Dyn4RigidBodyControl;
 import States.BallSlowing;
+import States.BallRolling;
 import GameObjects.PlayerControl;
 import MessageSystem.GameContactListner;
 import States.BallFalling;
@@ -102,14 +103,26 @@ public class InGameAppState extends AbstractAppState{
         Material floorMat =  new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         floorMat.setColor("Color", ColorRGBA.Blue);
         
-        
+        //adding floor
         floor.setMaterial(floorMat);
-        BodyFixture floorFixuture =  CreateBodyFixture.createBodyFixtureFromSpatial(floorBox, Vector2f.ZERO, 0.0f);
+        BodyFixture floorFixuture = CreateBodyFixture.createBodyFixtureFromSpatial(floorBox, Vector2f.ZERO, 0.0f);
         Body floor2D = new Body();
         floor2D.addFixture(floorFixuture);
         floor2D.setMass(Mass.Type.INFINITE);
         Dyn4RigidBodyControl floorControl = new Dyn4RigidBodyControl(floor, floor2D);
         floor.addControl(floorControl);
+        
+        //adding ceiling
+        Geometry ceiling = new Geometry("ceiling", floorBox);
+        ceiling.setMaterial(floorMat);
+        BodyFixture ceilFixture = CreateBodyFixture.createBodyFixtureFromSpatial(floorBox, Vector2f.ZERO, 0.0f);
+        Body ceil2D = new Body();
+        ceil2D.addFixture(ceilFixture);
+        ceil2D.setMass(Mass.Type.INFINITE);
+        ceil2D.getTransform().setTranslation(0.0, 15.0);
+        ceiling.getLocalTransform().setTranslation(new Vector3f(0.0f, 15.0f, 0.0f));
+        Dyn4RigidBodyControl ceilControl = new Dyn4RigidBodyControl(ceiling, ceil2D);
+        ceiling.addControl(ceilControl);
         
         //Adding sides to the game field.
         Box sideBox = new Box(new Vector3f(-.5f ,-15.0f  , -1.5f), new Vector3f(.5f,  15.0f, 1.5f));
@@ -145,11 +158,13 @@ public class InGameAppState extends AbstractAppState{
         m_SceneNode.attachChild(leftBox);
         m_SceneNode.attachChild(rightBox);
         m_SceneNode.attachChild(floor);
+        m_SceneNode.attachChild(ceiling);
        
         
         m_2Dworld.addBody(floor2D);
         m_2Dworld.addBody(leftBox2D);
         m_2Dworld.addBody(rightBox2D);
+        m_2Dworld.addBody(ceil2D);
         
         setWorld();
         setPlayer();
@@ -163,16 +178,17 @@ public class InGameAppState extends AbstractAppState{
         Sphere playerSphere = new Sphere(25, 25, 1.0f);
         Geometry playerGeom = new Geometry("Player", playerSphere);
         playerGeom.setMaterial(playerMat);
-        playerGeom.getLocalTransform().setTranslation(-10.0f, 3.0f, 0.0f);
+        playerGeom.getLocalTransform().setTranslation(-10.0f, 6.0f, 0.0f);
         BodyFixture playerFix =  CreateBodyFixture.createBodyFixtureFromSpatial(playerSphere, 
         Vector2f.ZERO);
         Body playerBody = new Body();
         playerBody.addFixture(playerFix);
         playerBody.setMass();
-        playerBody.getTransform().setTranslation(-10.0, 3.0);
+        playerBody.getTransform().setTranslation(-10.0, 6.0);
         PlayerControl control = new PlayerControl(playerGeom, playerBody);
-        control.getBody().applyImpulse(new Vector2(50.0, 0.0));
+        //control.getBody().applyImpulse(new Vector2(50.0, 0.0));
         control.setState(BallFalling.GetInstance());
+        //control.setState(BallRolling.GetInstance());
         control.getBody().setUserData(control);
         GameInput.GameInputManager.GetInstance().register((GameOrientationListener)control);
         GameInput.GameInputManager.GetInstance().register((GameTouchListner)control);

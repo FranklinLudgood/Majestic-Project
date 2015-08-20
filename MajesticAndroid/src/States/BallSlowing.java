@@ -66,9 +66,7 @@ public class BallSlowing implements StateInterface {
         if(Math.abs(control.getJumpVector().length()) <= profile.isZero)
             return BallFalling.GetInstance();
         
-        
-        
-        
+          
         return null;
     }
 
@@ -98,7 +96,6 @@ public class BallSlowing implements StateInterface {
 
      @Override
     public void endCollisionEvent(PlayerControl control, CollisionEvent event) {
-         if(event.getClosingSpeed() < 0.0f)
             control.setJumpNormal(new Vector2f(Vector2f.ZERO));
     }
     

@@ -22,9 +22,9 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
     
     public static final String PlayerName = "PlayerControlBall";
     public static final int PlayerID = -1;
-    public static final float scale = 10.0f;
-    public static final float maxSpeed = 40.0f;
-    public static final float jumpScale = 60.0f;
+    public static final float scale = 1.0f;
+    public static final float maxSpeed = 10.0f;
+    public static final float jumpScale = 30.0f;
     
     private StateInterface m_state;
     private Vector3f m_DeviceOrientation;

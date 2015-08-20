@@ -46,32 +46,49 @@ public class BallRolling implements StateInterface {
         
          float speed = (float) control.getBody().getLinearVelocity().getMagnitude();
          float yRot = -1.0f * control.getDeviceOrientation().y;
-         control.getBody().applyImpulse(new Vector2(yRot * control.scale, 0.0));
-
+         PlayerProfile profile = PlayerProfile.GetInstance();
          
+          if(Math.abs(speed) >= control.maxSpeed){
+                  Vector2 linearVel = new Vector2(control.getBody().getLinearVelocity());
+                  linearVel.normalize();
+                  linearVel.setMagnitude(control.maxSpeed);
+                  control.getBody().setLinearVelocity(linearVel);   
+                }
+          else {
+              control.getBody().applyImpulse(new Vector2(yRot * control.scale, 0.0));
+          }
+          
+          if(profile.tilt_coefficient > Math.abs(yRot))
+             return BallSlowing.GetInstance();
+          
+          if(control.getTouchedOccured() == true && Math.abs(control.getJumpVector().length()) > profile.isZero){
+            control.setTouchedOccured(false);
+            double jumpX = (double) control.getJumpVector().x;
+            double jumpY = (double) control.getJumpVector().y;
+            Vector2 impulse = new Vector2(jumpX, jumpY);
+            impulse.setMagnitude(control.jumpScale);
+            control.getBody().applyImpulse(impulse);
+            return BallFalling.GetInstance();
+        }
+          
+          if(Math.abs(control.getJumpVector().length()) < profile.isZero)
+            return BallFalling.GetInstance();
+
+         /*
          PlayerProfile profile = PlayerProfile.GetInstance();
          if(profile.tilt_coefficient < Math.abs(yRot))
              return BallSlowing.GetInstance();
          
-          if(Math.abs(speed) >= control.maxSpeed){
-                    control.getBody().getLinearVelocity().normalize();
-                    control.getBody().getLinearVelocity().setMagnitude(control.maxSpeed);
-                }
+         
          
         
-        if(control.getTouchedOccured() == true && Math.abs(control.getJumpVector().length()) > profile.isZero){
-            Vector2f jump = control.getJumpVector();
-            jump.multLocal(control.jumpScale);
-            Vector2 impulse = new Vector2(jump.x, jump.y);
-            control.getBody().applyImpulse(impulse);
-            return BallFalling.GetInstance();
-        }
         
-         if(Math.abs(control.getJumpVector().length()) < profile.isZero)
-            return BallFalling.GetInstance();
         
-        control.setTouchedOccured(false);
+        
+        
+        */
         return null;
+        
     }
 
      @Override
@@ -101,10 +118,7 @@ public class BallRolling implements StateInterface {
 
      @Override
     public void endCollisionEvent(PlayerControl control, CollisionEvent event) {
-         
-         if(event.getClosingSpeed() < 0.0f)
             control.setJumpNormal(new Vector2f(Vector2f.ZERO)); 
-         
     }
     
 }
