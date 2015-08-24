@@ -186,9 +186,7 @@ public class InGameAppState extends AbstractAppState{
         playerBody.setMass();
         playerBody.getTransform().setTranslation(-10.0, 6.0);
         PlayerControl control = new PlayerControl(playerGeom, playerBody);
-        //control.getBody().applyImpulse(new Vector2(50.0, 0.0));
         control.setState(BallFalling.GetInstance());
-        //control.setState(BallRolling.GetInstance());
         control.getBody().setUserData(control);
         GameInput.GameInputManager.GetInstance().register((GameOrientationListener)control);
         GameInput.GameInputManager.GetInstance().register((GameTouchListner)control);
