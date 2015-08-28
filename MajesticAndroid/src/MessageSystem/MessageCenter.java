@@ -13,7 +13,6 @@ import com.jme3.scene.Spatial;
 
 //TODO: Test this class.
 
-
 public class MessageCenter {
     
     
@@ -125,6 +124,28 @@ public class MessageCenter {
         }
     
         return success;
+    }
+    
+    
+    public void RemoveActor(Spatial actor, String filter){
+        
+        if(m_AreaObjects.isEmpty() == true)
+            return;
+    
+        for(int i = 0; i < m_AreaObjects.size(); ++i){
+            if(m_AreaObjects.get(i).equals(filter) == true){
+                m_AreaObjects.get(i).removeActor(actor);
+            }
+        }
+         
+    }
+    
+    public boolean RemoveTrigger(TimeTrigger trigger){
+        return m_TimeObjects.remove(trigger);
+    }
+    
+    public boolean RemoveTrigger(AreaTrigger trigger){
+        return m_AreaObjects.remove(trigger);
     }
     
    
