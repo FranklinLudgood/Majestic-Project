@@ -23,19 +23,23 @@ import org.dyn4j.dynamics.Settings;
 import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.Vector2;
 import GameObjects.Dyn4RigidBodyControl;
-import States.BallSlowing;
-import States.BallRolling;
 import GameObjects.PlayerControl;
 import MessageSystem.GameContactListner;
 import States.BallFalling;
 import Utils.CreateBodyFixture;
 import com.jme3.math.ColorRGBA;
+import MessageSystem.*;
+import com.jme3.bounding.BoundingSphere;
+import com.jme3.bounding.BoundingVolume;
+
 
 
 public class InGameAppState extends AbstractAppState{
     
-    private World m_2Dworld;
+    
     private Application m_Application;
+    private World m_2Dworld;
+    private MessageCenter m_MessageCenter;
     private Node m_SceneNode;
     
     public void set2Dworld(World world){m_2Dworld = world;}
@@ -51,6 +55,7 @@ public class InGameAppState extends AbstractAppState{
      @Override
     public void update(float tpf) {
        super.update(tpf);
+       m_MessageCenter.update(tpf);
        double elapsedTime = (double) tpf;
        m_2Dworld.update(elapsedTime);
     }
@@ -61,6 +66,7 @@ public class InGameAppState extends AbstractAppState{
      super.cleanup();
      m_2Dworld.removeAllBodiesAndJoints();
      m_2Dworld = null;
+     m_MessageCenter = null;
    }
     
     
@@ -68,6 +74,7 @@ public class InGameAppState extends AbstractAppState{
    public void initialize(AppStateManager stateManager, Application app) {
        super.initialize(stateManager, app);
        
+      m_MessageCenter = MessageCenter.GetInstance();
        
       Settings worldSettings = new Settings();
       worldSettings.setStepFrequency((1/60.0));
@@ -173,6 +180,8 @@ public class InGameAppState extends AbstractAppState{
     
     private void setPlayer(){
         
+        
+        
         Material playerMat = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         playerMat.setColor("Color", ColorRGBA.Red);
         Sphere playerSphere = new Sphere(25, 25, 1.0f);
@@ -194,11 +203,13 @@ public class InGameAppState extends AbstractAppState{
         m_2Dworld.addBody(playerBody);
         m_SceneNode.attachChild(playerGeom);
     
+        //testMessageCenter();
+        //m_MessageCenter.AddActor(playerGeom, "test");
     }
     
     private void setWorld(){
         
-         Material ballMat = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        Material ballMat = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         ballMat.setColor("Color", ColorRGBA.Magenta);
         
         Material cylinderMat = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
@@ -251,7 +262,6 @@ public class InGameAppState extends AbstractAppState{
         ball3.addControl(ball3Control);
         
         
-        
         //Creating boxes
         Box boxMesh = new Box(1.0f, 1.0f, 1.0f);
         Geometry box1 = new Geometry("Box1", boxMesh);
@@ -293,6 +303,39 @@ public class InGameAppState extends AbstractAppState{
         m_2Dworld.addBody(box2Body);
         
     
+    }
+    
+    private void testMessageCenter(){
+    
+        //Testing timer function
+        TimeTrigger timer = new TimeTrigger(60.0f, new Triggered() {
+
+            public void onTriggered() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        }, true);
+        m_MessageCenter.CreateTimeDelay(timer);
+         
+                
+        //Testing area function
+         Material ballMat = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        ballMat.setColor("Color", ColorRGBA.Green);
+        BoundingVolume volume =  new BoundingSphere(3.0f, new Vector3f(-2.5f, 5.5f, 0.0f));
+        Sphere ball4Sphere = new Sphere(25, 25, 3.0f);
+        Geometry ball4 = new Geometry("Ball3", ball4Sphere);
+        ball4.setLocalTranslation(new Vector3f(-2.5f, 5.5f, 0.0f));
+        ball4.setMaterial(ballMat);
+        AreaTrigger areaTimer  = new AreaTrigger(volume,new Triggered() {
+
+            public void onTriggered() {
+                throw new UnsupportedOperationException("Area Triggered"); //To change body of generated methods, choose Tools | Templates.
+            }
+        } , new Vector2f(-2.5f, 5.5f), "test", true);
+        
+       m_MessageCenter.CreateAreaTrigger(areaTimer);
+       m_SceneNode.attachChild(ball4);
+        
+                
     }
     
     

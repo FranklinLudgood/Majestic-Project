@@ -55,7 +55,7 @@ public class MessageCenter {
             for(int i = 0; i < m_AreaObjects.size(); ++i)
                 m_AreaObjects.get(i).update(tpf);
             
-            while(m_bufferObjects.isEmpty() != false){
+            while(m_bufferObjects.isEmpty() != true){
                   GameEvent event = m_bufferObjects.getHead();
                     if(event != null){
                         if(m_EventResponders.containsKey(event.getType()) == true){
@@ -146,6 +146,47 @@ public class MessageCenter {
     
     public boolean RemoveTrigger(AreaTrigger trigger){
         return m_AreaObjects.remove(trigger);
+    }
+    
+    
+   
+    public void addMessageResponse(MessageResponse response, int key){
+    
+        boolean isCreated = m_MessageResponders.containsKey(key);
+        if(isCreated != true)
+            m_MessageResponders.put(key, response);
+    }
+    
+    
+    public void addBroadCastResponse(BroadCastResponse response, GameBroadCast.BroadCastType type){
+    
+        boolean isCreated = m_BroadCastResponders.containsKey(type);
+        if(isCreated == true)
+            m_BroadCastResponders.get(type).add(response);
+        
+        else 
+        {
+            ArrayList list = new ArrayList<BroadCastResponse>();
+            list.add(type);
+            m_BroadCastResponders.put(type, list);
+        }
+    
+    }
+    
+    
+    
+    public void addEventResponse(EventResponse responce, GameEvent.EventType type){
+        
+        boolean isCreated = m_EventResponders.containsKey(type);
+        if(isCreated == true)
+            m_EventResponders.get(type).add(responce);
+        else
+        {
+             ArrayList list = new ArrayList<EventResponse>();
+             list.add(responce);
+             m_EventResponders.put(type, list);
+        }
+     
     }
     
    
