@@ -5,11 +5,7 @@
  *******************************************************/
 package GameObjects;
 
-/**
- *
- * @author Rashaan
- * TODO: 
- */
+
 public class PlayerProfile {
     
     private static PlayerProfile m_profile;

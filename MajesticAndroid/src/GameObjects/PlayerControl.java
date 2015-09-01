@@ -20,6 +20,8 @@ import org.dyn4j.dynamics.Body;
 
 public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientationListener, GameTouchListner, BaseGameEntity, CollisionResponse {
     
+    
+    
     public static final String PlayerName = "PlayerControlBall";
     public static final int PlayerID = -1;
     public static final float scale = 1.0f;
