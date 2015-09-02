@@ -26,6 +26,7 @@ public class PlayerProfile {
     }
     
     public String Name;
+    public int max_health;
     public int total_points;
     public int total_amount_health_lost;
     public int total_amount_health_received;
@@ -49,6 +50,7 @@ public class PlayerProfile {
         tilt_coefficient = 0.25f;
         stop_coefficient = 0.5f;
         isZero = 0.05f;
+        max_health = 3;
     
     }
     

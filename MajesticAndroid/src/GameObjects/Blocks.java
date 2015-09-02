@@ -4,18 +4,25 @@
  * Date Created: 08-31-2015
  *******************************************************/
 package GameObjects;
+import MessageSystem.CollisionEvent;
+import MessageSystem.CollisionResponse;
+import MessageSystem.GameBroadCast;
 import com.jme3.material.Material;
 import com.jme3.scene.Spatial;
 import org.dyn4j.dynamics.Body;
 
+//TODO: finish this function;
 
-public class Blocks extends Dyn4RigidBodyControl implements BaseGameEntity{
+public class Blocks extends Dyn4RigidBodyControl implements BaseGameEntity, CollisionResponse {
     
-    private static int NumberOfBlocks = 0;
+    
     public static Material yellowMaterial;
     public static Material blueMaterial;
     public static Material borderMaterial;
+    public static final int basePointBlock = 3;
     
+    private String m_Name;
+    private int m_ID;
     private float m_delay;
     private float m_timer;
     private boolean m_enableTimer;
@@ -31,7 +38,6 @@ public class Blocks extends Dyn4RigidBodyControl implements BaseGameEntity{
     public Blocks(float delay, Spatial spatial, Body body, boolean enableTimer,
                     BaseGameEntity.ObjectType type) {
         super(spatial, body);
-        body.setUserData(this);
         m_delay = delay;
         m_timer = 0.0f;
         m_enableTimer = enableTimer;
@@ -51,15 +57,26 @@ public class Blocks extends Dyn4RigidBodyControl implements BaseGameEntity{
     @Override
     public ObjectType getObjectType() {return m_type;}
 
-    public int getObjectID() {
+    @Override
+    public int getObjectID() {return m_ID;}
+
+    @Override
+    public String getObjectName() {return m_Name;}
+
+    public void beginCollisionEvent(CollisionEvent event) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public String getObjectName() {
+    public void persistCollisionEvent(CollisionEvent event) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
-    
-    
+
+    public void endCollisionEvent(CollisionEvent event) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public BaseGameEntity getEntityID() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+        
 }

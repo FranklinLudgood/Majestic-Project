@@ -8,6 +8,8 @@ import GameInput.GameOrientationListener;
 import GameInput.GameTouchListner;
 import MessageSystem.CollisionEvent;
 import MessageSystem.CollisionResponse;
+import MessageSystem.MessageCenter;
+import MessageSystem.GameBroadCast;
 import com.jme3.input.event.TouchEvent;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -28,16 +30,25 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
     public static final float maxSpeed = 10.0f;
     public static final float jumpScale = 30.0f;
     
+    
     private StateInterface m_state;
     private Vector3f m_DeviceOrientation;
     private Vector2f m_jumpNormal;
+    private int m_CurrentHealth;
+    private int m_Score;
+    private int m_Multipler;
     private boolean m_TouchOccured;
+    private BaseGameEntity.ObjectType m_type;
     
     public PlayerControl(){
         m_DeviceOrientation = new Vector3f();
         m_jumpNormal = new Vector2f();
         m_jumpNormal.set(Vector2f.ZERO);
         m_TouchOccured = false;
+        m_CurrentHealth = PlayerProfile.GetInstance().max_health;
+        m_type = BaseGameEntity.ObjectType.BLUE_BALL;
+        m_Score = 0;
+        m_Multipler = 1;
     }
     
     public PlayerControl(Spatial spatial, Body body){
@@ -46,6 +57,10 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
          m_jumpNormal = new Vector2f();
          m_jumpNormal.set(Vector2f.ZERO);
          m_TouchOccured = false;
+         m_CurrentHealth = PlayerProfile.GetInstance().max_health;
+         m_type = BaseGameEntity.ObjectType.BLUE_BALL;
+         m_Score = 0;
+         m_Multipler = 1;
     }
     
  
@@ -110,12 +125,12 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
      
     }  
 
-     @Override
+    @Override
     public ObjectType getObjectType() { 
-         return BaseGameEntity.ObjectType.PLAYER; 
+         return m_type; 
     }
 
-     @Override
+    @Override
     public int getObjectID() {
          return PlayerID;
     }
@@ -132,6 +147,37 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
 
      @Override
     public void persistCollisionEvent(CollisionEvent event) {
+         
+          BaseGameEntity entity = event.getBaseEntity();
+          if(entity != null){
+              
+              switch(entity.getObjectType()){
+                  
+                  case YELLOW_BLOCK:
+                      if(m_type == ObjectType.YELLOW_BALL)
+                          calculateScore();
+                      else if(m_type == ObjectType.BLUE_BALL)
+                          calculateHealth();
+                      break;
+                      
+                  case BLUE_BLOCK:
+                      if(m_type == ObjectType.BLUE_BALL)
+                          calculateScore();
+                      else if(m_type == ObjectType.YELLOW_BALL)
+                          calculateHealth();
+                      break;
+                      
+                  case YELLOW_BUMPER:
+                      m_type = ObjectType.YELLOW_BALL;
+                      break;
+                      
+                  case BLUE_BUMPER:
+                      m_type = ObjectType.BLUE_BALL;
+                      break;
+              }
+          }
+         
+         
         m_state.persistCollisionEvent(this, event);
     }
 
@@ -143,6 +189,22 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
      @Override
     public BaseGameEntity getEntityID() {
          return this;
+    }
+     
+    private void calculateScore(){
+        m_Score+= m_Multipler * Blocks.basePointBlock;
+        ++m_Multipler;
+    }
+    
+    private void calculateHealth(){
+        
+          --m_CurrentHealth;
+                            
+          if(m_CurrentHealth <= 0){
+              GameBroadCast cast = new GameBroadCast(null, null, GameBroadCast.BroadCastType.GAME_LOST);
+              MessageCenter.GetInstance().SendBroadCast(cast);
+          }
+    
     }
     
 }

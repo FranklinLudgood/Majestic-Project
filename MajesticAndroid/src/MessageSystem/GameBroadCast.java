@@ -8,7 +8,7 @@ package MessageSystem;
 
 public class GameBroadCast {
     
-    public static enum BroadCastType{GAME_WON, GAME_LOST}
+    public static enum BroadCastType{GAME_WON, GAME_LOST, UPDATE_SCORE,}
     
     private String m_message;
     private Object m_package;
