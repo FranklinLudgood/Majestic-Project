@@ -122,6 +122,7 @@ public class InGameAppState extends AbstractAppState{
         //adding ceiling
         Geometry ceiling = new Geometry("ceiling", floorBox);
         ceiling.setMaterial(floorMat);
+        //ceiling.getMaterial()
         BodyFixture ceilFixture = CreateBodyFixture.createBodyFixtureFromSpatial(floorBox, Vector2f.ZERO, 0.0f);
         Body ceil2D = new Body();
         ceil2D.addFixture(ceilFixture);
