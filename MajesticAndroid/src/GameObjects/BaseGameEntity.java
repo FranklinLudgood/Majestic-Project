@@ -8,7 +8,7 @@ package GameObjects;
 
 public interface BaseGameEntity {
     
-    public enum ObjectType {PLAYER, BENIGN, YELLOW_BLOCK, BLUE_BLOCK, 
+    public enum ObjectType {PLAYER, LEVEL_MANAGER, BENIGN, YELLOW_BLOCK, BLUE_BLOCK, 
                                 YELLOW_BUMPER, BLUE_BUMPER, BLUE_BALL, YELLOW_BALL}
     
     public ObjectType getObjectType();

@@ -6,7 +6,7 @@
 package States;
 import GameObjects.BaseGameEntity;
 import GameObjects.Blocks;
-import com.jme3.scene.Spatial;
+
 
 
 public class ChangingBlock implements BlockInterface {
@@ -53,5 +53,7 @@ public class ChangingBlock implements BlockInterface {
     
     @Override
     public void Exit(Blocks block, BlockInterface state){
+            float timer = block.getDelay();
+             block.setTimer(timer);
     }
 }

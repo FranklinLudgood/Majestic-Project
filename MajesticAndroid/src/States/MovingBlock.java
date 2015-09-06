@@ -5,6 +5,9 @@
  *******************************************************/
 package States;
 import GameObjects.Blocks;
+import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.MotionPathListener;
+import com.jme3.cinematic.events.MotionEvent;
 
 public class MovingBlock implements BlockInterface {
     

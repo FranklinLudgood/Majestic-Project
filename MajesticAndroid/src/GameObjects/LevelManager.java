@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 //TODO: Finish this class.
-public class LevelManager {
+public class LevelManager implements BaseGameEntity {
     
     private HashMap<String, List<Dyn4RigidBodyControl>> m_inGameObjects;
     private HashMap<String, List<BaseGameEntity>> m_gameObjects;
     
     private static LevelManager m_levelManager;
+    private static final String Name = "LevelManager";
+    private static final int levelID = -2;
     private LevelManager() {
         
         m_inGameObjects = new HashMap<String, List<Dyn4RigidBodyControl>>();
@@ -49,5 +51,17 @@ public class LevelManager {
     }
     
     public void getStatus(){}
+
+    public ObjectType getObjectType() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getObjectID() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String getObjectName() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

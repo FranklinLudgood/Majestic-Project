@@ -7,7 +7,7 @@ package GameObjects;
 import MessageSystem.CollisionEvent;
 import MessageSystem.CollisionResponse;
 import States.BlockInterface;
-import MessageSystem.GameBroadCast;
+//import MessageSystem.GameBroadCast;
 import com.jme3.material.Material;
 import com.jme3.scene.Spatial;
 import org.dyn4j.dynamics.Body;
@@ -22,23 +22,26 @@ public class Blocks extends Dyn4RigidBodyControl implements BaseGameEntity, Coll
     public static Material borderMaterial;
     public static final int basePointBlock = 3;
     
-    private String m_Name;
-    private int m_ID;
-    private float m_delay;
-    private float m_timer;
-    private BaseGameEntity.ObjectType m_type;
+    protected BlockInterface m_state; 
+    protected String m_Name;
+    protected int m_ID;
+    protected float m_delay;
+    protected float m_timer;
+    protected BaseGameEntity.ObjectType m_type;
 
     public Blocks(){
         super();
         m_timer = m_delay = 0.0f;
         m_type = BaseGameEntity.ObjectType.BENIGN;
+        m_state = null;
     }
     
     public Blocks(float delay, Spatial spatial, Body body, boolean enableTimer,
-                    BaseGameEntity.ObjectType type) {
+                    BaseGameEntity.ObjectType type, BlockInterface state) {
         super(spatial, body);
         m_delay = delay;
         m_timer = 0.0f;
+        m_state = state;
         m_type = type;
         
         if(m_type == BaseGameEntity.ObjectType.PLAYER || m_type == BaseGameEntity.ObjectType.YELLOW_BUMPER
@@ -46,6 +49,9 @@ public class Blocks extends Dyn4RigidBodyControl implements BaseGameEntity, Coll
             m_type = BaseGameEntity.ObjectType.BENIGN;
         }
     }
+    
+    public void setState(BlockInterface state){m_state = state;}
+    public BlockInterface getState(){return m_state;}
     
     public void setDelay(float delay){m_delay = delay;}
     public float getDelay(){return m_delay;}
@@ -56,12 +62,22 @@ public class Blocks extends Dyn4RigidBodyControl implements BaseGameEntity, Coll
     
     @Override
     public void update(float tpf){
-        throw new UnsupportedOperationException("Not supported yet.");
+        super.update(tpf);
+        if(m_state != null){
+       
+            BlockInterface newState = m_state.Update(this, tpf);
+            if(newState != null){
+                m_state.Exit(this, newState);   
+                newState.Enter(this, m_state);   
+                m_state = newState;
+            }
+        
+        }
+        
     }
 
     @Override
     public ObjectType getObjectType() {return m_type;}
-    
     public void setObjectType(ObjectType type){m_type = type;}
 
     @Override
@@ -71,19 +87,52 @@ public class Blocks extends Dyn4RigidBodyControl implements BaseGameEntity, Coll
     public String getObjectName() {return m_Name;}
 
     public void beginCollisionEvent(CollisionEvent event) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        BaseGameEntity entity = event.getBaseEntity();
+        if(entity != null){
+            switch(entity.getObjectType()){
+                
+                case BLUE_BALL:
+                    if(m_type == BaseGameEntity.ObjectType.BLUE_BLOCK){
+                      //need to send message  
+                    }
+                    break;
+                    
+                case YELLOW_BALL:
+                    if(m_type == BaseGameEntity.ObjectType.YELLOW_BLOCK){
+                       //need to send message
+                    }
+                    break;       
+            }
+        }
     }
 
     public void persistCollisionEvent(CollisionEvent event) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BaseGameEntity entity = event.getBaseEntity();
+        if(entity != null){
+            switch(entity.getObjectType()){
+                
+                case BLUE_BALL:
+                    if(m_type == BaseGameEntity.ObjectType.BLUE_BLOCK){
+                      //need to send message  
+                    }
+                    break;
+                    
+                case YELLOW_BALL:
+                    if(m_type == BaseGameEntity.ObjectType.YELLOW_BLOCK){
+                       //need to send message
+                    }
+                    break;       
+            }
+        }
+       
     }
 
+    @Override
     public void endCollisionEvent(CollisionEvent event) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         
     }
 
-    public BaseGameEntity getEntityID() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public BaseGameEntity getEntityID() { return this; }
         
 }
