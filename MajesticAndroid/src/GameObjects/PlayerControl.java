@@ -102,6 +102,7 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
          m_state.onChangedOrientation(this, EulerX, EulerY, EulerZ);
     }
 
+     
      @Override
     public void onTouch(TouchEvent event, float tpf) {
         m_state.onTouch(this, event, tpf); 
@@ -112,6 +113,7 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
      public void render(RenderManager rm, ViewPort vp) {
         
     }
+      
       
      @Override
     public void update(float tpf) {
@@ -169,15 +171,16 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
                       
                   case YELLOW_BUMPER:
                       m_type = ObjectType.YELLOW_BALL;
+                      m_3dSpatial.setMaterial(Block.yellowMaterial);
                       break;
                       
                   case BLUE_BUMPER:
                       m_type = ObjectType.BLUE_BALL;
+                      m_3dSpatial.setMaterial(Block.blueMaterial);
                       break;
               }
           }
-         
-         
+            
         m_state.persistCollisionEvent(this, event);
     }
 
@@ -187,13 +190,15 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
     }
 
      @Override
-    public BaseGameEntity getEntityID() {
-         return this;
-    }
+    public BaseGameEntity getEntityID() {return this;}
      
     private void calculateScore(){
-        m_Score+= m_Multipler * Blocks.basePointBlock;
+        m_Score+= m_Multipler * Block.basePointBlock;
         ++m_Multipler;
+        GameBroadCast scoreCast = new GameBroadCast(null, new Integer(m_Score), GameBroadCast.BroadCastType.UPDATE_SCORE);
+        GameBroadCast multiplyerCast = new GameBroadCast(null, new Integer(m_Multipler), GameBroadCast.BroadCastType.UPDATE_MULTIPLER);
+        MessageCenter.GetInstance().SendBroadCast(scoreCast);
+        MessageCenter.GetInstance().SendBroadCast(multiplyerCast);
     }
     
     private void calculateHealth(){
@@ -202,6 +207,10 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
                             
           if(m_CurrentHealth <= 0){
               GameBroadCast cast = new GameBroadCast(null, null, GameBroadCast.BroadCastType.GAME_LOST);
+              MessageCenter.GetInstance().SendBroadCast(cast);
+          }
+          else{
+              GameBroadCast cast = new GameBroadCast(null, new Integer(m_CurrentHealth), GameBroadCast.BroadCastType.UPDATE_HEALTH);
               MessageCenter.GetInstance().SendBroadCast(cast);
           }
     

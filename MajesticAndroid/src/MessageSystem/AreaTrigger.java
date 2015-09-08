@@ -14,8 +14,7 @@ import com.jme3.math.Vector3f;
 
 public class AreaTrigger implements Triggerable {
     
-    private List<Spatial> m_actors;
-    private Triggered m_Triggered;
+    private List<AreaTriggered> m_actors;
     private BoundingVolume m_volume;
     private String m_filter;
     private Vector2f m_position;
@@ -28,14 +27,13 @@ public class AreaTrigger implements Triggerable {
         m_filter = null;
         m_position = null;
         
-        m_actors = new ArrayList<Spatial>();
+        m_actors = new ArrayList<AreaTriggered>();
     
     }
     
-    public AreaTrigger(BoundingVolume volume, Triggered triggered, Vector2f position, String filter, boolean isActive){
+    public AreaTrigger(BoundingVolume volume, Vector2f position, String filter, boolean isActive){
         
         m_volume = volume;
-        m_Triggered = triggered;
         m_position = position;
         m_filter = filter;
         m_isActive = isActive;
@@ -43,7 +41,7 @@ public class AreaTrigger implements Triggerable {
         if(m_volume != null && m_position != null)
             m_volume.setCenter(new Vector3f(m_position.x, m_position.y, 0.0f));
         
-        m_actors = new ArrayList<Spatial>();
+        m_actors = new ArrayList<AreaTriggered>();
         
     }
     
@@ -55,18 +53,18 @@ public class AreaTrigger implements Triggerable {
         
         for(int i = 0; i < m_actors.size(); ++i){
            
-            Spatial actor = m_actors.get(i);
+            Spatial actor = m_actors.get(i).getSpatial();
             if(m_isActive == true && m_volume != null && actor != null){
                 if(m_volume.contains(actor.getWorldTranslation()))
-                    OnTriggered();
+                    m_actors.get(i).onTriggered(this);
             }
         
         }
     }
     
-    public void addActor(Spatial actor){m_actors.add(actor);}
+    public void addActor(AreaTriggered actor){m_actors.add(actor);}
     
-    public void removeActor(Spatial actor){m_actors.remove(actor);}
+    public void removeActor(AreaTriggered actor){m_actors.remove(actor);}
     
     public void setPosition(Vector2f position){
         m_position = position;
@@ -74,19 +72,20 @@ public class AreaTrigger implements Triggerable {
             m_volume.setCenter(new Vector3f(m_position.x, m_position.y, 0.0f));
         
     }
+    public Vector2f getPosition(){return m_position;}
     
-    public void setTrigger(Triggered triggered) { m_Triggered = triggered;}
+     @Override
+    public void OnTriggered(){}
+     
+     @Override
+     public boolean  isTriggered(){return true;}
     
     public void setFilter(String filter){m_filter = filter;}
     public String getFilter(){return m_filter;}
+    
+    public void setVolume(BoundingVolume volume){m_volume = volume;}
+    public BoundingVolume getVolume(){return m_volume;}
 
     public boolean isActive() {return m_isActive;}
 
-    public boolean isTriggered() {return m_isActive;}
-
-    public void OnTriggered() {
-         if(m_Triggered != null)
-            m_Triggered.onTriggered();
-    }
-    
 }

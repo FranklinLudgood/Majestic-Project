@@ -110,7 +110,7 @@ public class MessageCenter {
         m_AreaObjects.add(trigger);
     }
     
-    public boolean AddActor(Spatial actor, String filter){
+    public boolean AddActor(AreaTriggered actor, String filter){
     
         if(m_AreaObjects.isEmpty() == true)
             return false;
@@ -127,7 +127,7 @@ public class MessageCenter {
     }
     
     
-    public void RemoveActor(Spatial actor, String filter){
+    public void RemoveActor(AreaTriggered actor, String filter){
         
         if(m_AreaObjects.isEmpty() == true)
             return;

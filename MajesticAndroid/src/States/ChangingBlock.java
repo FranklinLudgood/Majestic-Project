@@ -5,7 +5,7 @@
  *******************************************************/
 package States;
 import GameObjects.BaseGameEntity;
-import GameObjects.Blocks;
+import GameObjects.Block;
 
 
 
@@ -23,26 +23,26 @@ public class ChangingBlock implements BlockInterface {
     }
     
     @Override
-    public void Enter(Blocks block, BlockInterface state){
-             block.getSpatial().setMaterial(Blocks.blueMaterial);
+    public void Enter(Block block, BlockInterface state){
+             block.getSpatial().setMaterial(Block.blueMaterial);
              block.setObjectType(BaseGameEntity.ObjectType.BLUE_BLOCK);
              float timer = block.getDelay();
              block.setTimer(timer);           
     }
     
     @Override
-    public BlockInterface Update(Blocks block, float tpf){
+    public BlockInterface Update(Block block, float tpf){
     
         float timer = block.getTimer() - tpf;
         if(timer <= 0.0f){
             block.setTimer(block.getDelay());
             
-            if(block.getSpatial().getMaterial() == Blocks.blueMaterial){
-                block.getSpatial().setMaterial(Blocks.yellowMaterial);
+            if(block.getObjectType() == BaseGameEntity.ObjectType.BLUE_BLOCK){
+                block.getSpatial().setMaterial(Block.yellowMaterial);
                 block.setObjectType(BaseGameEntity.ObjectType.YELLOW_BLOCK);
             }
             else{
-                block.getSpatial().setMaterial(Blocks.blueMaterial);
+                block.getSpatial().setMaterial(Block.blueMaterial);
                 block.setObjectType(BaseGameEntity.ObjectType.BLUE_BLOCK);
             }
         }else
@@ -52,7 +52,7 @@ public class ChangingBlock implements BlockInterface {
     }
     
     @Override
-    public void Exit(Blocks block, BlockInterface state){
+    public void Exit(Block block, BlockInterface state){
             float timer = block.getDelay();
              block.setTimer(timer);
     }

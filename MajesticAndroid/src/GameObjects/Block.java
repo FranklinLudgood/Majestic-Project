@@ -1,5 +1,5 @@
 /*******************************************************
- * File Name: Blocks.java
+ * File Name: Block.java
  * Author: Franklin Ludgood
  * Date Created: 08-31-2015
  *******************************************************/
@@ -7,14 +7,12 @@ package GameObjects;
 import MessageSystem.CollisionEvent;
 import MessageSystem.CollisionResponse;
 import States.BlockInterface;
-//import MessageSystem.GameBroadCast;
 import com.jme3.material.Material;
 import com.jme3.scene.Spatial;
 import org.dyn4j.dynamics.Body;
 
-//TODO: finish this function;
 
-public class Blocks extends Dyn4RigidBodyControl implements BaseGameEntity, CollisionResponse {
+public class Block extends Dyn4RigidBodyControl implements BaseGameEntity, CollisionResponse {
     
     
     public static Material yellowMaterial;
@@ -29,14 +27,14 @@ public class Blocks extends Dyn4RigidBodyControl implements BaseGameEntity, Coll
     protected float m_timer;
     protected BaseGameEntity.ObjectType m_type;
 
-    public Blocks(){
+    public Block(){
         super();
         m_timer = m_delay = 0.0f;
         m_type = BaseGameEntity.ObjectType.BENIGN;
         m_state = null;
     }
     
-    public Blocks(float delay, Spatial spatial, Body body, boolean enableTimer,
+    public Block(float delay, Spatial spatial, Body body, boolean enableTimer,
                     BaseGameEntity.ObjectType type, BlockInterface state) {
         super(spatial, body);
         m_delay = delay;

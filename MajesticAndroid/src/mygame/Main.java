@@ -29,7 +29,7 @@ public class Main extends SimpleApplication {
 
        
         //setting fly camera
-        cam.setLocation(new Vector3f(0.0f, 15.0f, 10.0f));
+        cam.setLocation(new Vector3f(0.0f, 15.0f, 20.0f));
         cam.lookAt(new Vector3f(0.0f, 0.0f, 0.0f), Vector3f.UNIT_Y);
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(5.0f);

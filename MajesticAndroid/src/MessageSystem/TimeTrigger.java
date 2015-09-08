@@ -12,16 +12,16 @@ public class TimeTrigger implements Triggerable  {
     private float m_delay;
     private boolean m_isActive;
     private boolean m_isTriggered;
-    private Triggered m_Triggered;
+    private TimedTriggered m_Triggered;
     
-    public TimeTrigger(float delay, Triggered triggered, boolean isActive){
+    public TimeTrigger(float delay, TimedTriggered triggered, boolean isActive){
         m_delay = delay;
         m_Triggered = triggered;
         m_isActive = isActive;
         m_isTriggered = false;
     }
     
-    public void setTrigger(Triggered triggered) { m_Triggered = triggered;}
+    public void setTrigger(TimedTriggered triggered) { m_Triggered = triggered;}
     
     public void setDelay(float delay){m_delay = delay;}
     
