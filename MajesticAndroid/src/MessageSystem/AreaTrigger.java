@@ -12,9 +12,8 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
 
-public class AreaTrigger implements Triggerable {
+public class AreaTrigger {
     
-    private List<AreaTriggered> m_actors;
     private BoundingVolume m_volume;
     private String m_filter;
     private Vector2f m_position;
@@ -27,8 +26,6 @@ public class AreaTrigger implements Triggerable {
         m_filter = null;
         m_position = null;
         
-        m_actors = new ArrayList<AreaTriggered>();
-    
     }
     
     public AreaTrigger(BoundingVolume volume, Vector2f position, String filter, boolean isActive){
@@ -41,30 +38,24 @@ public class AreaTrigger implements Triggerable {
         if(m_volume != null && m_position != null)
             m_volume.setCenter(new Vector3f(m_position.x, m_position.y, 0.0f));
         
-        m_actors = new ArrayList<AreaTriggered>();
+       
         
     }
     
 
-    public void update(float tpf) {
+    public void update(AreaTriggered trigger) {
          
         if(m_isActive == false)
             return;
         
-        for(int i = 0; i < m_actors.size(); ++i){
-           
-            Spatial actor = m_actors.get(i).getSpatial();
-            if(m_isActive == true && m_volume != null && actor != null){
-                if(m_volume.contains(actor.getWorldTranslation()))
-                    m_actors.get(i).onTriggered(this);
+      
+        if(m_volume != null){
+            if(m_volume.contains(trigger.getSpatial().getWorldTranslation())){
+                trigger.onTriggered(this);
             }
-        
         }
     }
     
-    public void addActor(AreaTriggered actor){m_actors.add(actor);}
-    
-    public void removeActor(AreaTriggered actor){m_actors.remove(actor);}
     
     public void setPosition(Vector2f position){
         m_position = position;
@@ -74,11 +65,6 @@ public class AreaTrigger implements Triggerable {
     }
     public Vector2f getPosition(){return m_position;}
     
-     @Override
-    public void OnTriggered(){}
-     
-     @Override
-     public boolean  isTriggered(){return true;}
     
     public void setFilter(String filter){m_filter = filter;}
     public String getFilter(){return m_filter;}

@@ -30,14 +30,14 @@ public class MessageCenter {
     private EnumMap<GameBroadCast.BroadCastType, List<BroadCastResponse>> m_BroadCastResponders;
     private HashMap<Integer, MessageResponse> m_MessageResponders;
     private List<TimeTrigger> m_TimeObjects;
-    private List<AreaTrigger> m_AreaObjects;
+    private HashMap<AreaTrigger,List<AreaTriggered>> m_AreaObjects;
     private RingBuffer<GameEvent> m_bufferObjects;
     
     
     private MessageCenter(){
     
         m_TimeObjects = new ArrayList<TimeTrigger>();
-        m_AreaObjects = new ArrayList<AreaTrigger>();
+        m_AreaObjects = new HashMap<AreaTrigger,List<AreaTriggered>>();
         m_EventResponders = new EnumMap<GameEvent.EventType,List<EventResponse>>(GameEvent.EventType.class);
         m_BroadCastResponders = new EnumMap<GameBroadCast.BroadCastType, List<BroadCastResponse>>(GameBroadCast.BroadCastType.class);
         m_MessageResponders = new HashMap<Integer, MessageResponse>();
@@ -52,8 +52,17 @@ public class MessageCenter {
             for(int i = 0; i < m_TimeObjects.size(); ++i)
                 m_TimeObjects.get(i).update(tpf);
             
-            for(int i = 0; i < m_AreaObjects.size(); ++i)
-                m_AreaObjects.get(i).update(tpf);
+          
+            
+       for(int i = 0; i < m_AreaObjects.keySet().toArray().length; ++i){
+           AreaTrigger area = (AreaTrigger) m_AreaObjects.keySet().toArray()[i];
+           List<AreaTriggered> list = m_AreaObjects.get(area);
+           if(list != null && !list.isEmpty()){
+               for(int j = 0; j < list.size(); ++j){
+                   area.update(list.get(j));
+               }
+           }
+       }
             
             while(m_bufferObjects.isEmpty() != true){
                   GameEvent event = m_bufferObjects.getHead();
@@ -107,7 +116,9 @@ public class MessageCenter {
     }
     
     public void CreateAreaTrigger(AreaTrigger trigger){
-        m_AreaObjects.add(trigger);
+       if(!m_AreaObjects.containsKey(trigger)){
+           m_AreaObjects.put(trigger, new ArrayList<AreaTriggered>());
+       }
     }
     
     public boolean AddActor(AreaTriggered actor, String filter){
@@ -116,12 +127,13 @@ public class MessageCenter {
             return false;
         
         boolean success = false;
-        for(int i = 0; i < m_AreaObjects.size(); ++i){
-            if(m_AreaObjects.get(i).getFilter().equals(filter)){
-                m_AreaObjects.get(i).addActor(actor);
-                success = true;
-            }
-        }
+       for(int i = 0; i < m_AreaObjects.keySet().toArray().length; ++i){
+           AreaTrigger area = (AreaTrigger) m_AreaObjects.keySet().toArray()[i];
+           if(area.getFilter().equals(filter)){
+               success = true;
+               m_AreaObjects.get(area).add(actor);
+           }
+       }
     
         return success;
     }
@@ -132,11 +144,13 @@ public class MessageCenter {
         if(m_AreaObjects.isEmpty() == true)
             return;
     
-        for(int i = 0; i < m_AreaObjects.size(); ++i){
-            if(m_AreaObjects.get(i).equals(filter) == true){
-                m_AreaObjects.get(i).removeActor(actor);
-            }
-        }
+         
+       for(int i = 0; i < m_AreaObjects.keySet().toArray().length; ++i){
+           AreaTrigger area = (AreaTrigger) m_AreaObjects.keySet().toArray()[i];
+           if(area.getFilter().equals(filter)){
+               m_AreaObjects.get(area).remove(actor);
+           }
+       }
          
     }
     
@@ -144,8 +158,8 @@ public class MessageCenter {
         return m_TimeObjects.remove(trigger);
     }
     
-    public boolean RemoveTrigger(AreaTrigger trigger){
-        return m_AreaObjects.remove(trigger);
+    public void RemoveTrigger(AreaTrigger trigger){
+         m_AreaObjects.remove(trigger);
     }
     
     
