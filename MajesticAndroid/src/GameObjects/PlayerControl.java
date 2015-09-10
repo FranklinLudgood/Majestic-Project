@@ -6,6 +6,7 @@
 package GameObjects;
 import GameInput.GameOrientationListener;
 import GameInput.GameTouchListner;
+import MessageSystem.AreaTrigger;
 import MessageSystem.CollisionEvent;
 import MessageSystem.CollisionResponse;
 import MessageSystem.MessageCenter;
@@ -18,9 +19,11 @@ import com.jme3.math.Vector2f;
 import States.StateInterface;
 import com.jme3.scene.Spatial;
 import org.dyn4j.dynamics.Body;
+import MessageSystem.AreaTriggered;
+import org.dyn4j.dynamics.Force;
 
 
-public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientationListener, GameTouchListner, BaseGameEntity, CollisionResponse {
+public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientationListener, GameTouchListner, BaseGameEntity, CollisionResponse, AreaTriggered {
     
     
     
@@ -214,6 +217,14 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
               MessageCenter.GetInstance().SendBroadCast(cast);
           }
     
+    }
+
+    @Override
+    public void onTriggered(AreaTrigger trigger) {
+         Vector3f position = m_3dSpatial.getWorldTranslation();
+         Vector2f force = trigger.getPosition().subtract(position.x, position.y);
+         force.multLocal(GravityBlock.GravityConstant);
+         m_2Dbody.applyForce(new Force((double) force.x, (double) force.y));
     }
     
 }

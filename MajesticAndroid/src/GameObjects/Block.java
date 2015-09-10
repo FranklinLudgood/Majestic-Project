@@ -18,6 +18,7 @@ public class Block extends Dyn4RigidBodyControl implements BaseGameEntity, Colli
     public static Material yellowMaterial;
     public static Material blueMaterial;
     public static Material borderMaterial;
+    public static Material gravityMaterial;
     public static final int basePointBlock = 3;
     
     protected BlockInterface m_state; 

@@ -22,10 +22,7 @@ import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.Settings;
 import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.Vector2;
-import com.jme3.math.FastMath;
-//import GameObjects.Dyn4RigidBodyControl;
 import com.jme3.cinematic.MotionPath;
-//import GameObjects.PlayerControl;
 import GameObjects.*;
 import MessageSystem.GameContactListner;
 import States.BallFalling;
@@ -45,6 +42,7 @@ public class InGameAppState extends AbstractAppState{
     private World m_2Dworld;
     private MessageCenter m_MessageCenter;
     private Node m_SceneNode;
+    private PlayerControl m_play;
     
     public void set2Dworld(World world){m_2Dworld = world;}
     public World getWorld(){return m_2Dworld;}
@@ -114,6 +112,9 @@ public class InGameAppState extends AbstractAppState{
         
         Block.yellowMaterial = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         Block.yellowMaterial.setColor("Color", ColorRGBA.Yellow);
+        
+        Block.gravityMaterial = new Material(m_Application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        Block.gravityMaterial.setColor("Color", ColorRGBA.Pink);
         
         //Setting up a floor
         //Adding a floor
@@ -202,62 +203,71 @@ public class InGameAppState extends AbstractAppState{
         playerGeom.addControl(control);
         m_2Dworld.addBody(playerBody);
         m_SceneNode.attachChild(playerGeom);
-       
+        m_play = control;
     
     }
     
     private void setWorld(){
         
          Box boxMesh = new Box(1.0f, 1.0f, 1.0f);
-         Geometry pointBox = new Geometry("Point Box", boxMesh);
-         pointBox.setMaterial(Block.yellowMaterial);
-         BodyFixture pointFixture = CreateBodyFixture.createBodyFixtureFromSpatial(boxMesh, Vector2f.ZERO, 0.0f);
-         Body pointBody = new Body();
-         pointBody.addFixture(pointFixture);
-         pointBody.setMass(Mass.Type.INFINITE);
-         pointBody.getTransform().setTranslation(9.5, 5.5);
-         Block pointControl = new Block(10.0f, pointBox, pointBody, false, BaseGameEntity.ObjectType.YELLOW_BLOCK, null);
-         pointBox.addControl(pointControl);
-         m_SceneNode.attachChild(pointBox);
-         m_2Dworld.addBody(pointBody);
+         Geometry gravityBox = new Geometry("Gravity Box", boxMesh);
+         gravityBox.setMaterial(Block.gravityMaterial);
+         BodyFixture gravityFixture = CreateBodyFixture.createBodyFixtureFromSpatial(boxMesh, Vector2f.ZERO, 0.0f);
+         Body gravityBody = new Body();
+         gravityBody.addFixture(gravityFixture);
+         gravityBody.setMass(Mass.Type.INFINITE);
+         gravityBody.getTransform().setTranslation(0.0, 5.5);
+         GravityBlock gravityControl = new GravityBlock(6.0f, 10.0f, gravityBox, gravityBody, false, null, true);
+         //m_MessageCenter.CreateAreaTrigger(gravityControl.getTrigger());
+         //m_MessageCenter.AddActor(m_play, gravityControl.getTrigger().getFilter());
+         gravityBox.addControl(gravityControl);
+         m_SceneNode.attachChild(gravityBox);
+         m_2Dworld.addBody(gravityBody);
          
          
-         Geometry pointChangeBox = new Geometry("Point Change Box", boxMesh);
-         pointChangeBox.setMaterial(Block.yellowMaterial);
-         BodyFixture pointChangeFixture = CreateBodyFixture.createBodyFixtureFromSpatial(boxMesh, Vector2f.ZERO, 0.0f);
-         Body pointChangeBody = new Body();
-         pointChangeBody.addFixture(pointChangeFixture);
-         pointChangeBody.setMass(Mass.Type.INFINITE);
-         pointChangeBody.getTransform().setTranslation(-9.5, 5.5);
-         Block pointChangeControl = new Block(5.0f, pointChangeBox, pointChangeBody, true, BaseGameEntity.ObjectType.YELLOW_BLOCK, States.ChangingBlock.GetInstance());
-         pointChangeBox.addControl(pointChangeControl);
-         m_SceneNode.attachChild(pointChangeBox);
-         m_2Dworld.addBody(pointChangeBody);
          
+         Geometry pointMovingBox1 = new Geometry("Point Moving Box", boxMesh);
+         pointMovingBox1.setMaterial(Block.blueMaterial);
+         BodyFixture pointMovingFixture1 = CreateBodyFixture.createBodyFixtureFromSpatial(boxMesh, Vector2f.ZERO, 0.0f);
+         Body pointMovingBody1 = new Body();
+         pointMovingBody1.addFixture(pointMovingFixture1);
+         pointMovingBody1.setMass(Mass.Type.INFINITE);
+         pointMovingBody1.getTransform().setTranslation(8.0, 5.0);
+         MovingBlock moving1 = new MovingBlock(1.5f, pointMovingBox1, pointMovingBody1, true, BaseGameEntity.ObjectType.BLUE_BLOCK, 
+                                               States.ChangingBlock.GetInstance(), 8.0f, 1.0f, LoopMode.Loop);
          
-         Geometry pointMovingBox = new Geometry("Point Moving Box", boxMesh);
-         pointMovingBox.setMaterial(Block.blueMaterial);
-         BodyFixture pointMovingFixture = CreateBodyFixture.createBodyFixtureFromSpatial(boxMesh, Vector2f.ZERO, 0.0f);
-         Body pointMovingBody = new Body();
-         pointMovingBody.addFixture(pointMovingFixture);
-         pointMovingBody.setMass(Mass.Type.INFINITE);
-         pointMovingBody.getTransform().setTranslation(8.0, 5.0);
-         MovingBlock moving = new MovingBlock(2.5f, pointMovingBox, pointMovingBody, true, BaseGameEntity.ObjectType.BLUE_BLOCK, 
-                                                States.ChangingBlock.GetInstance(), 1.0f, 1.0f, LoopMode.Loop);
+         MotionPath path1 = new MotionPath();
+         path1.addWayPoint(new Vector3f(-9.5f, 12.5f, 0.0f));
+         path1.addWayPoint(new Vector3f(-9.5f, 2.0f, 0.0f));
+         path1.enableDebugShape(m_Application.getAssetManager(), m_SceneNode);
+         MotionPath path2 = new MotionPath();
+         path2.addWayPoint(new Vector3f(9.5f, 12.5f, 0.0f));
+         path2.addWayPoint(new Vector3f(9.5f, 2.0f, 0.0f));
+         path2.enableDebugShape(m_Application.getAssetManager(), m_SceneNode);
+         moving1.setPath(path1);
+         path1.setCycle(true);
+         pointMovingBox1.addControl(moving1);
+         m_SceneNode.attachChild(pointMovingBox1);
+         m_2Dworld.addBody(pointMovingBody1);
+         moving1.getEvent().play();
          
-         MotionPath path = new MotionPath();
-         for(int i = 0; i<8; ++i){
-             path.addWayPoint(new Vector3f(FastMath.cos(FastMath.QUARTER_PI * i) * 5.0f, (FastMath.sin(FastMath.QUARTER_PI * i) * 5.0f) + 8.0f, 0.0f));
-         }
-         path.enableDebugShape(m_Application.getAssetManager(), m_SceneNode);
-         moving.setPath(path);
-         path.setCycle(true);
-         pointMovingBox.addControl(moving);
-         m_SceneNode.attachChild(pointMovingBox);
-         m_2Dworld.addBody(pointMovingBody);
-         moving.getEvent().play();
+        Geometry pointMovingBox2 = new Geometry("Point Moving Box", boxMesh);
+         pointMovingBox2.setMaterial(Block.blueMaterial);
+         BodyFixture pointMovingFixture2 = CreateBodyFixture.createBodyFixtureFromSpatial(boxMesh, Vector2f.ZERO, 0.0f);
+         Body pointMovingBody2 = new Body();
+         pointMovingBody2.addFixture(pointMovingFixture2);
+         pointMovingBody2.setMass(Mass.Type.INFINITE);
+         pointMovingBody2.getTransform().setTranslation(8.0, 5.0);
+         MovingBlock moving2 = new MovingBlock(1.5f, pointMovingBox2, pointMovingBody2, true, BaseGameEntity.ObjectType.BLUE_BLOCK, 
+                                               States.ChangingBlock.GetInstance(), 8.0f, 1.0f, LoopMode.Loop);
          
-        
+         moving2.setPath(path2);
+         path2.setCycle(true);
+         pointMovingBox2.addControl(moving2);
+         m_SceneNode.attachChild(pointMovingBox2);
+         m_2Dworld.addBody(pointMovingBody2);
+         moving2.getEvent().play();
+         
     }
     
     private void testMessageCenter(){

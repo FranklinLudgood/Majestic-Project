@@ -39,8 +39,6 @@ public class Dyn4RigidBodyControl implements Control {
         m_3dSpatial = spatial;
         m_Orientation = new Quaternion();
         
-       // if(m_3dSpatial != null && m_2Dbody != null)
-        //    m_3dSpatial.addControl(this);
     }
 
     public Control cloneForSpatial(Spatial spatial) {
