@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.EnumMap;
-import com.jme3.scene.Spatial;
+//import com.jme3.scene.Spatial;
 
 
 //TODO: Test this class.
@@ -31,6 +31,7 @@ public class MessageCenter {
     private HashMap<Integer, MessageResponse> m_MessageResponders;
     private List<TimeTrigger> m_TimeObjects;
     private HashMap<AreaTrigger,List<AreaTriggered>> m_AreaObjects;
+    private HashMap<String, List<AreaTriggered>> m_TriggeredObjects;
     private RingBuffer<GameEvent> m_bufferObjects;
     
     
@@ -41,6 +42,7 @@ public class MessageCenter {
         m_EventResponders = new EnumMap<GameEvent.EventType,List<EventResponse>>(GameEvent.EventType.class);
         m_BroadCastResponders = new EnumMap<GameBroadCast.BroadCastType, List<BroadCastResponse>>(GameBroadCast.BroadCastType.class);
         m_MessageResponders = new HashMap<Integer, MessageResponse>();
+        m_TriggeredObjects = new HashMap<String, List<AreaTriggered>>();
         m_bufferObjects = new RingBuffer<GameEvent>(GameEvent.class, 35);
     
     }
@@ -54,15 +56,26 @@ public class MessageCenter {
             
           
             
+            
        for(int i = 0; i < m_AreaObjects.keySet().toArray().length; ++i){
            AreaTrigger area = (AreaTrigger) m_AreaObjects.keySet().toArray()[i];
            List<AreaTriggered> list = m_AreaObjects.get(area);
-           if(list != null && !list.isEmpty()){
-               for(int j = 0; j < list.size(); ++j){
-                   area.update(list.get(j));
-               }
+           if(list == null){
+              if(m_TriggeredObjects.containsKey(area.getFilter())){
+                  list = m_TriggeredObjects.get(area.getFilter());
+                  m_AreaObjects.put(area, list);
+              }
            }
-       }
+           else if(!list.isEmpty()){
+               
+            for(int j = 0; j < list.size(); ++j){
+                   area.update(list.get(j));   
+            }
+               
+           
+           }
+           
+        }
             
             while(m_bufferObjects.isEmpty() != true){
                   GameEvent event = m_bufferObjects.getHead();
@@ -117,41 +130,52 @@ public class MessageCenter {
     
     public void CreateAreaTrigger(AreaTrigger trigger){
        if(!m_AreaObjects.containsKey(trigger)){
-           m_AreaObjects.put(trigger, new ArrayList<AreaTriggered>());
-       }
+           if(m_TriggeredObjects.containsKey(trigger.getFilter())){
+                List<AreaTriggered> list = m_TriggeredObjects.get(trigger.getFilter());
+                m_AreaObjects.put(trigger, list);   
+           } else
+               m_AreaObjects.put(trigger, null);
+       } else
+           m_AreaObjects.put(trigger, null);   
     }
     
-    public boolean AddActor(AreaTriggered actor, String filter){
+    public void AddActor(AreaTriggered actor, String filter){
+        
+        if(m_TriggeredObjects.containsKey(filter) == true){
+   
+            List<AreaTriggered> list = m_TriggeredObjects.get(filter);
+            if(list != null){
+                list.add(actor);
+            }
+            else {
+                list = new ArrayList<AreaTriggered>();
+                list.add(actor);
+                m_TriggeredObjects.put(filter, list);
+            }
+        } else {
+        
+            List<AreaTriggered> newList = new ArrayList<AreaTriggered>();
+            newList.add(actor);
+            m_TriggeredObjects.put(filter, newList);
+        }
+       
+    }
     
-        if(m_AreaObjects.isEmpty() == true)
+    
+    public boolean RemoveActor(AreaTriggered actor, String filter){
+       
+        if(m_TriggeredObjects.isEmpty() == true)
             return false;
         
         boolean success = false;
-       for(int i = 0; i < m_AreaObjects.keySet().toArray().length; ++i){
-           AreaTrigger area = (AreaTrigger) m_AreaObjects.keySet().toArray()[i];
-           if(area.getFilter().equals(filter)){
-               success = true;
-               m_AreaObjects.get(area).add(actor);
-           }
-       }
-    
+        if(m_TriggeredObjects.containsKey(filter) == true){
+            List<AreaTriggered> list = m_TriggeredObjects.get(filter);
+            if(list != null){
+                success = m_TriggeredObjects.get(filter).remove(actor);
+            }
+        }
+           
         return success;
-    }
-    
-    
-    public void RemoveActor(AreaTriggered actor, String filter){
-        
-        if(m_AreaObjects.isEmpty() == true)
-            return;
-    
-         
-       for(int i = 0; i < m_AreaObjects.keySet().toArray().length; ++i){
-           AreaTrigger area = (AreaTrigger) m_AreaObjects.keySet().toArray()[i];
-           if(area.getFilter().equals(filter)){
-               m_AreaObjects.get(area).remove(actor);
-           }
-       }
-         
     }
     
     public boolean RemoveTrigger(TimeTrigger trigger){

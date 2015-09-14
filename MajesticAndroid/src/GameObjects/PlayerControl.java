@@ -6,6 +6,11 @@
 package GameObjects;
 import GameInput.GameOrientationListener;
 import GameInput.GameTouchListner;
+import static GameObjects.BaseGameEntity.ObjectType.BLUE_BLOCK;
+import static GameObjects.BaseGameEntity.ObjectType.BLUE_BUMPER;
+import static GameObjects.BaseGameEntity.ObjectType.GRAVITY_BLOCK;
+import static GameObjects.BaseGameEntity.ObjectType.YELLOW_BLOCK;
+import static GameObjects.BaseGameEntity.ObjectType.YELLOW_BUMPER;
 import MessageSystem.AreaTrigger;
 import MessageSystem.CollisionEvent;
 import MessageSystem.CollisionResponse;
@@ -21,6 +26,7 @@ import com.jme3.scene.Spatial;
 import org.dyn4j.dynamics.Body;
 import MessageSystem.AreaTriggered;
 import org.dyn4j.dynamics.Force;
+import org.dyn4j.geometry.Vector2;
 
 
 public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientationListener, GameTouchListner, BaseGameEntity, CollisionResponse, AreaTriggered {
@@ -32,6 +38,7 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
     public static final float scale = 1.0f;
     public static final float maxSpeed = 10.0f;
     public static final float jumpScale = 30.0f;
+    public static final float gravityDelay = 2.0f;
     
     
     private StateInterface m_state;
@@ -42,6 +49,7 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
     private int m_Multipler;
     private boolean m_TouchOccured;
     private BaseGameEntity.ObjectType m_type;
+    private float gravityTimer;
     
     public PlayerControl(){
         m_DeviceOrientation = new Vector3f();
@@ -52,6 +60,7 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
         m_type = BaseGameEntity.ObjectType.BLUE_BALL;
         m_Score = 0;
         m_Multipler = 1;
+       gravityTimer = 0.0f;
     }
     
     public PlayerControl(Spatial spatial, Body body){
@@ -64,6 +73,7 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
          m_type = BaseGameEntity.ObjectType.BLUE_BALL;
          m_Score = 0;
          m_Multipler = 1;
+         gravityTimer = 0.0f;
     }
     
  
@@ -121,6 +131,10 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
      @Override
     public void update(float tpf) {
       super.update(tpf);
+      
+      if(gravityTimer > 0.0f)
+          gravityTimer-=tpf;
+      
       StateInterface newState = m_state.Update(this, tpf);
       if(newState != null){
           m_state.ExitState(this, newState);
@@ -147,44 +161,22 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
 
      @Override
     public void beginCollisionEvent(CollisionEvent event) {
-         m_state.beginCollisionEvent(this, event);
+         
+          BaseGameEntity entity = event.getBaseEntity();
+          if(entity != null)
+              ResolveCollision(entity.getObjectType());
+          
+          m_state.beginCollisionEvent(this, event);
     }
 
      @Override
     public void persistCollisionEvent(CollisionEvent event) {
          
           BaseGameEntity entity = event.getBaseEntity();
-          if(entity != null){
-              
-              switch(entity.getObjectType()){
-                  
-                  case YELLOW_BLOCK:
-                      if(m_type == ObjectType.YELLOW_BALL)
-                          calculateScore();
-                      else if(m_type == ObjectType.BLUE_BALL)
-                          calculateHealth();
-                      break;
+          if(entity != null)
+              ResolveCollision(entity.getObjectType());
                       
-                  case BLUE_BLOCK:
-                      if(m_type == ObjectType.BLUE_BALL)
-                          calculateScore();
-                      else if(m_type == ObjectType.YELLOW_BALL)
-                          calculateHealth();
-                      break;
-                      
-                  case YELLOW_BUMPER:
-                      m_type = ObjectType.YELLOW_BALL;
-                      m_3dSpatial.setMaterial(Block.yellowMaterial);
-                      break;
-                      
-                  case BLUE_BUMPER:
-                      m_type = ObjectType.BLUE_BALL;
-                      m_3dSpatial.setMaterial(Block.blueMaterial);
-                      break;
-              }
-          }
-            
-        m_state.persistCollisionEvent(this, event);
+          m_state.persistCollisionEvent(this, event);
     }
 
      @Override
@@ -218,13 +210,53 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
           }
     
     }
+    
+    private void ResolveCollision(BaseGameEntity.ObjectType type){
+    
+        switch(type){
+                  
+                  case YELLOW_BLOCK:
+                      if(m_type == ObjectType.YELLOW_BALL)
+                          calculateScore();
+                      else if(m_type == ObjectType.BLUE_BALL)
+                          calculateHealth();
+                      break;
+                      
+                  case BLUE_BLOCK:
+                      if(m_type == ObjectType.BLUE_BALL)
+                          calculateScore();
+                      else if(m_type == ObjectType.YELLOW_BALL)
+                          calculateHealth();
+                      break;
+                      
+                  case YELLOW_BUMPER:
+                      m_type = ObjectType.YELLOW_BALL;
+                      m_3dSpatial.setMaterial(Block.yellowMaterial);
+                      break;
+                      
+                  case BLUE_BUMPER:
+                      m_type = ObjectType.BLUE_BALL;
+                      m_3dSpatial.setMaterial(Block.blueMaterial);
+                      break;
+                      
+                  case GRAVITY_BLOCK:
+                      break;
+              }
+    }
 
     @Override
     public void onTriggered(AreaTrigger trigger) {
-         Vector3f position = m_3dSpatial.getWorldTranslation();
-         Vector2f force = trigger.getPosition().subtract(position.x, position.y);
-         force.multLocal(GravityBlock.GravityConstant);
-         m_2Dbody.applyForce(new Force((double) force.x, (double) force.y));
+        
+        if(gravityTimer <= 0.0f){
+            Vector3f position = m_3dSpatial.getWorldTranslation();
+            Vector2f force = trigger.getPosition().subtract(position.x, position.y);
+            float distanceSquared = force.length();
+            force.multLocal((GravityBlock.GravityConstant/distanceSquared));
+            m_2Dbody.applyImpulse(new Vector2((double) force.x, (double) force.y));
+            gravityTimer = gravityDelay;
+        }
+        
     }
+    
     
 }

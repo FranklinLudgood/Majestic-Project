@@ -174,9 +174,9 @@ public class InGameAppState extends AbstractAppState{
         m_SceneNode.attachChild(rightBoxGeom);
         m_2Dworld.addBody(rightBox2D);
         
-        
-        setWorld();
         setPlayer();
+        setWorld();
+        
                
     }
     
@@ -218,9 +218,10 @@ public class InGameAppState extends AbstractAppState{
          gravityBody.setMass(Mass.Type.INFINITE);
          gravityBody.getTransform().setTranslation(0.0, 5.5);
          GravityBlock gravityControl = new GravityBlock(6.0f, 10.0f, gravityBox, gravityBody, false, null, true);
-         //m_MessageCenter.CreateAreaTrigger(gravityControl.getTrigger());
-         //m_MessageCenter.AddActor(m_play, gravityControl.getTrigger().getFilter());
+         m_MessageCenter.CreateAreaTrigger(gravityControl.getTrigger());
+         m_MessageCenter.AddActor(m_play, gravityControl.getTrigger().getFilter());
          gravityBox.addControl(gravityControl);
+         gravityBody.setUserData(gravityControl);
          m_SceneNode.attachChild(gravityBox);
          m_2Dworld.addBody(gravityBody);
          

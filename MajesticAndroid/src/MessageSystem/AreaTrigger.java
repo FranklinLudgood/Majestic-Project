@@ -49,7 +49,7 @@ public class AreaTrigger {
             return;
         
       
-        if(m_volume != null){
+        if(m_volume != null && trigger != null){
             if(m_volume.contains(trigger.getSpatial().getWorldTranslation())){
                 trigger.onTriggered(this);
             }
