@@ -58,6 +58,8 @@ public class Dyn4RigidBodyControl implements Control {
     
     public Body getBody(){return m_2Dbody;}
     
+    public Quaternion getOrientation(){return m_Orientation;}
+    
     public void setControl(Body body, Spatial spatial){
     
         m_2Dbody = body;
