@@ -64,6 +64,9 @@ public class LevelManager implements BaseGameEntity {
     public void setSceneNode(Node node){m_SceneNode = node;}
     public Node getNode(){return m_SceneNode;}
     
+    public void setRenderManager(RenderManager manager){m_RenderManager = manager;}
+    public RenderManager getRenderManager(){return m_RenderManager;}
+    
     
     //TODO: finish this function
     public void LoadLevel(String fileName){
@@ -105,16 +108,163 @@ public class LevelManager implements BaseGameEntity {
         return null;
     }
     
-    //TODO: Finish Regestering Objects
-    //Dyn4RigidBodyControl need to add
-    //to the 2D world as well as BaseEntitys.
-    //and Spacial.
+    
     public void RegisterObject(String groupName, Dyn4RigidBodyControl body){
         
-        
-    
+             BaseGameEntity entity = (BaseGameEntity)body;
+             if(entity != null){
+                if(m_gameObjects.containsKey(groupName) == true){
+                    List<BaseGameEntity> list = m_gameObjects.get(groupName);
+                    if(list.contains(entity) == false){
+                        list.add(entity);
+                    }
+                } else {  
+                     List<BaseGameEntity> list = new ArrayList<BaseGameEntity>();
+                     list.add(entity);
+                     m_gameObjects.put(groupName, list);
+                }
+             }
+             
+             if(m_inGameObjects.containsKey(groupName) == true){
+                 List<Dyn4RigidBodyControl> list = m_inGameObjects.get(groupName);
+                 if(list.contains(body) == false){
+                     list.add(body);
+                 }
+             } else {  
+               List<Dyn4RigidBodyControl> list = new ArrayList<Dyn4RigidBodyControl>();
+               list.add(body);
+               m_inGameObjects.put(groupName, list);
+             }
+             
+             if(m_Spatials.containsKey(groupName) == true){
+                 List<Spatial> list = m_Spatials.get(groupName);
+                 if(list.contains(body.getSpatial()) == false){
+                     list.add(body.getSpatial());
+                 }
+             } else {
+                 List<Spatial> list = new ArrayList<Spatial>();
+                 list.add(body.getSpatial());
+                 m_Spatials.put(groupName, list);
+             }
+             
+             m_2Dworld.addBody(body.getBody());
     }
     
+    public void RemoveObject(String groupName, Dyn4RigidBodyControl body){
+        
+        m_2Dworld.removeBody(body.getBody());
+        if(m_gameObjects.containsKey(groupName) == true){
+          BaseGameEntity entity = (BaseGameEntity)body;
+          if(entity != null){
+            List<BaseGameEntity> list = m_gameObjects.get(groupName);
+            list.remove(entity);
+          }
+        }
+        
+        if(m_inGameObjects.containsKey(groupName) == true){
+           List<Dyn4RigidBodyControl> list = m_inGameObjects.get(groupName);
+           list.remove(body);
+        }
+        
+        if(m_Spatials.containsKey(groupName) == true){
+            List<Spatial> list = m_Spatials.get(groupName);
+            list.remove(body.getSpatial());
+        }
+    }
+    
+    public List<Dyn4RigidBodyControl> getRigidBodys(String groupName){
+        
+        if(m_inGameObjects.containsKey(groupName) == true){
+           return m_inGameObjects.get(groupName);
+        }
+        
+        return null;
+    }
+    
+    
+            
+    public void setSpatial(String groupName, Spatial spatial){
+        
+        if(m_Spatials.containsKey(groupName) == true){
+            List<Spatial> list = m_Spatials.get(groupName);
+            if(list.contains(spatial) == false){
+                list.add(spatial);
+            }
+        } else{
+             List<Spatial> list = new ArrayList<Spatial>();
+             list.add(spatial);
+             m_Spatials.put(groupName, list);
+        }      
+    }        
+    
+    
+    public List<Spatial> getSpatials(String groupName){
+    
+        if(m_Spatials.containsKey(groupName) == true)
+            return m_Spatials.get(groupName);
+    
+        return null;
+    }
+    
+   
+           
+    public boolean setCamera(String groupName, Camera camera){
+    
+        if(m_Cameras.containsKey(groupName) == false){
+            m_Cameras.put(groupName, camera);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public Camera getCamera(String groupName){
+    
+        if(m_Cameras.containsKey(groupName) == true)
+            return m_Cameras.get(groupName);
+    
+        return null;
+    }
+    
+    
+    public boolean setMotionPath(String groupName, MotionPath path){
+    
+        if(m_Paths.containsKey(groupName) == false){
+             m_Paths.put(groupName, path);
+             return true;
+        }
+        
+        return false;
+    }
+    
+    
+    public MotionPath getMotionPath(String groupName){
+    
+        if(m_Paths.containsKey(groupName) == true)
+            return m_Paths.get(groupName);
+        
+        return null;
+    }
+    
+    
+    public boolean setMotionEvent(String groupName, MotionEvent event){
+        
+       if(m_Events.containsKey(groupName) == false){
+           m_Events.put(groupName, event);
+           return false;
+       }
+    
+        return false;
+    }
+    
+    public MotionEvent getMotionEvent(String groupName){
+    
+        if(m_Events.containsKey(groupName) == true)
+            return m_Events.get(groupName);
+    
+        return null;
+    }
+            
 
     @Override
     public ObjectType getObjectType() {return BaseGameEntity.ObjectType.LEVEL_MANAGER;}
