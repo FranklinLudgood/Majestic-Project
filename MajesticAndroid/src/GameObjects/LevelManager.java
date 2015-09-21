@@ -17,6 +17,7 @@ import com.jme3.scene.Node;
 import java.util.ArrayList;
 import org.dyn4j.dynamics.World;
 import com.jme3.renderer.RenderManager;
+import com.jme3.asset.AssetManager;
 
 //TODO: Finish this class.
 public class LevelManager implements BaseGameEntity {
@@ -31,6 +32,7 @@ public class LevelManager implements BaseGameEntity {
     private World m_2Dworld;
     private Node m_SceneNode;
     private RenderManager m_RenderManager;
+    private AssetManager m_AssetManager;
     
     
     private static LevelManager m_levelManager;
@@ -66,6 +68,9 @@ public class LevelManager implements BaseGameEntity {
     
     public void setRenderManager(RenderManager manager){m_RenderManager = manager;}
     public RenderManager getRenderManager(){return m_RenderManager;}
+    
+    public void setAssetManger(AssetManager manager){m_AssetManager = manager;}
+    public AssetManager getAssetManager(){return m_AssetManager;}
     
     
     //TODO: finish this function
@@ -148,6 +153,7 @@ public class LevelManager implements BaseGameEntity {
              }
              
              m_2Dworld.addBody(body.getBody());
+             m_SceneNode.attachChild(body.getSpatial());
     }
     
     public void RemoveObject(String groupName, Dyn4RigidBodyControl body){

@@ -32,8 +32,11 @@ public class BallRolling implements StateInterface {
 
     @Override
     public void EnterState(PlayerControl control, StateInterface exitState) {
-        float yRot = control.getDeviceOrientation().y;
-        control.getBody().setLinearVelocity(new Vector2(yRot * control.scale , 0.0));  
+        
+        float speed = (float) control.getBody().getLinearVelocity().getMagnitude();
+        float yRot = -1.0f * control.getDeviceOrientation().y;
+        control.getBody().applyImpulse(new Vector2(yRot * control.scale, 0.0));
+        
     }
 
     @Override
@@ -47,6 +50,7 @@ public class BallRolling implements StateInterface {
          float speed = (float) control.getBody().getLinearVelocity().getMagnitude();
          float yRot = -1.0f * control.getDeviceOrientation().y;
          PlayerProfile profile = PlayerProfile.GetInstance();
+        
          
           if(Math.abs(speed) >= control.maxSpeed){
                   Vector2 linearVel = new Vector2(control.getBody().getLinearVelocity());
@@ -58,8 +62,6 @@ public class BallRolling implements StateInterface {
               control.getBody().applyImpulse(new Vector2(yRot * control.scale, 0.0));
           }
           
-          if(profile.tilt_coefficient > Math.abs(yRot))
-             return BallSlowing.GetInstance();
           
           if(control.getTouchedOccured() == true && Math.abs(control.getJumpVector().length()) > profile.isZero){
             control.setTouchedOccured(false);
@@ -69,24 +71,15 @@ public class BallRolling implements StateInterface {
             impulse.setMagnitude(control.jumpScale);
             control.getBody().applyImpulse(impulse);
             return BallFalling.GetInstance();
-        }
+          }
           
+          if(profile.tilt_coefficient > Math.abs(yRot))
+             return BallSlowing.GetInstance();
+          
+              
           if(Math.abs(control.getJumpVector().length()) < profile.isZero)
             return BallFalling.GetInstance();
 
-         /*
-         PlayerProfile profile = PlayerProfile.GetInstance();
-         if(profile.tilt_coefficient < Math.abs(yRot))
-             return BallSlowing.GetInstance();
-         
-         
-         
-        
-        
-        
-        
-        
-        */
         return null;
         
     }
@@ -113,7 +106,7 @@ public class BallRolling implements StateInterface {
      @Override
     public void persistCollisionEvent(PlayerControl control, CollisionEvent event) {
          Vector2f normal = event.getCollisionNormal();
-         control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));       
+         control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));
     }
 
      @Override

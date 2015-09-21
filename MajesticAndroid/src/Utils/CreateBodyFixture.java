@@ -17,6 +17,7 @@ import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Triangle;
 import org.dyn4j.geometry.Vector2;
+import java.lang.Math.*;
 
 
 public class CreateBodyFixture {
@@ -25,8 +26,8 @@ public class CreateBodyFixture {
     
         
        Vector3f boxCenter = box.getBound().getCenter();
-       double width = (double) (boxCenter.x + box.xExtent) - (boxCenter.x - box.xExtent);
-       double height = (double) (boxCenter.y + box.yExtent) - (boxCenter.y - box.yExtent);
+       double width = (double) Math.abs((boxCenter.x + box.xExtent) - (boxCenter.x - box.xExtent));
+       double height = (double)  Math.abs((boxCenter.y + box.yExtent) - (boxCenter.y - box.yExtent));
         Rectangle rectangle = new Rectangle(width, height);
         rectangle.translate((double) position.x, (double) position.y);
         rectangle.rotate(rotationRad);
@@ -37,14 +38,34 @@ public class CreateBodyFixture {
       public static BodyFixture createBodyFixtureFromSpatial(Box box, Vector3f position, float rotationRad){
     
        Vector3f boxCenter = box.getBound().getCenter();
-       double width = (double) (boxCenter.x + box.xExtent) - (boxCenter.x - box.xExtent);
-       double height = (double) (boxCenter.y + box.yExtent) - (boxCenter.y - box.yExtent);
+       double width = (double) Math.abs((boxCenter.x + box.xExtent) - (boxCenter.x - box.xExtent));
+       double height = (double) Math.abs((boxCenter.y + box.yExtent) - (boxCenter.y - box.yExtent));
        Rectangle rectangle = new Rectangle(width, height);
        rectangle.translate((double) position.x, (double) position.y);
        rectangle.rotate(rotationRad);
        BodyFixture body = new BodyFixture(rectangle);
        return body;
     }
+      
+      public static BodyFixture CreateBox(Vector3f position, float width, float height, float rotationRad){
+      
+       Rectangle rectangle = new Rectangle(width, height);
+       rectangle.translate((double) position.x, (double) position.y);
+       rectangle.rotate(rotationRad);
+       BodyFixture body = new BodyFixture(rectangle);
+       return body;
+       
+      }
+      
+      public static BodyFixture CreateBox(Vector2f position, float width, float height, float rotationRad){
+      
+       Rectangle rectangle = new Rectangle(width, height);
+       rectangle.translate((double) position.x, (double) position.y);
+       rectangle.rotate(rotationRad);
+       BodyFixture body = new BodyFixture(rectangle);
+       return body;
+       
+      }
     
     public static BodyFixture createBodyFixtureFromSpatial(Sphere sphere, Vector2f position){
     

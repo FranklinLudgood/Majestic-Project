@@ -46,11 +46,6 @@ public class BallSlowing implements StateInterface {
        drag.normalize();
        drag.multiply(-1.0 * profile.stop_coefficient);
        control.getBody().applyImpulse(drag);
-       
-              
-        
-        if(profile.tilt_coefficient < Math.abs(yRot))
-             return BallRolling.GetInstance();
              
         
         if(control.getTouchedOccured() == true && Math.abs(control.getJumpVector().length()) > 0.0f){
@@ -65,6 +60,9 @@ public class BallSlowing implements StateInterface {
         
         if(Math.abs(control.getJumpVector().length()) <= profile.isZero)
             return BallFalling.GetInstance();
+        
+        if(profile.tilt_coefficient < Math.abs(yRot))
+             return BallRolling.GetInstance();
         
           
         return null;
@@ -85,13 +83,13 @@ public class BallSlowing implements StateInterface {
     public void beginCollisionEvent(PlayerControl control, CollisionEvent event) {
          Vector2f normal = event.getCollisionNormal();
          control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));
+         
     }
 
      @Override
     public void persistCollisionEvent(PlayerControl control, CollisionEvent event) {
         Vector2f normal = event.getCollisionNormal();
-        control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));
-         
+        control.setJumpNormal(new Vector2f(-1.0f * normal.x , -1.0f * normal.y));    
     }
 
      @Override

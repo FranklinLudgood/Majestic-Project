@@ -11,6 +11,7 @@ import com.jme3.renderer.RenderManager;
 import AppStates.InGameAppState;
 import com.jme3.input.controls.TouchTrigger;
 import GameInput.GameInputManager;
+import GameObjects.LevelManager;
 
 
 public class Main extends SimpleApplication {
@@ -29,14 +30,20 @@ public class Main extends SimpleApplication {
 
        
         //setting fly camera
-        cam.setLocation(new Vector3f(0.0f, 15.0f, 20.0f));
-        cam.lookAt(new Vector3f(0.0f, 0.0f, 0.0f), Vector3f.UNIT_Y);
-        flyCam.setEnabled(true);
-        flyCam.setMoveSpeed(5.0f);
+        flyCam.setEnabled(false);
+        //flyCam.setMoveSpeed(5.0f);
+        
+        
+        LevelManager.GetInstance().setCamera("DefaultCam", cam);
+        LevelManager.GetInstance().setApplication(this);
+        LevelManager.GetInstance().setRenderManager(renderManager);
+        LevelManager.GetInstance().setSceneNode(rootNode);
+        LevelManager.GetInstance().setAssetManger(assetManager);
+        
+        //GUINode guiNode
         
         //Create and intialize InGameAppState
         InGameAppState state = new InGameAppState();
-        state.setNode(rootNode);
         stateManager.attach(state);
         
         

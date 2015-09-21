@@ -12,10 +12,7 @@ import GameObjects.PlayerProfile;
 import MessageSystem.CollisionEvent;
 import java.lang.Math.*;
 
-/**
- *
- * TODO:Finish this state
- */
+
 public class BallFalling implements StateInterface {
     
     private static BallFalling m_state;
