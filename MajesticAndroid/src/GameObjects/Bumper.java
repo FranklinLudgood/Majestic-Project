@@ -5,12 +5,14 @@
  *******************************************************/
 package GameObjects;
 
+import MessageSystem.CollisionEvent;
+import MessageSystem.CollisionResponse;
 import com.jme3.scene.Spatial;
 import org.dyn4j.dynamics.Body;
 import States.BumperInterface;
 
 
-public class Bumper extends Dyn4RigidBodyControl implements BaseGameEntity  {
+public class Bumper extends Dyn4RigidBodyControl implements BaseGameEntity, CollisionResponse  {
     
     private String m_name;
     private int m_ID;
@@ -47,6 +49,9 @@ public class Bumper extends Dyn4RigidBodyControl implements BaseGameEntity  {
         }
     }
     
+    public void setState(BumperInterface state){m_state = state;}
+    public BumperInterface getState(){return m_state;}
+            
     public void setObjectType(ObjectType type){m_type = type;}
 
     @Override
@@ -57,5 +62,20 @@ public class Bumper extends Dyn4RigidBodyControl implements BaseGameEntity  {
 
     @Override
     public String getObjectName() {return m_name;}
+
+    public void beginCollisionEvent(CollisionEvent event) {
+        //TODO: Add effects and animation
+    }
+
+    public void persistCollisionEvent(CollisionEvent event) {
+          //TODO: Add effects and animation
+    }
+
+    public void endCollisionEvent(CollisionEvent event) {
+         //TODO: Add effects and animation
+    }
+
+    @Override
+    public BaseGameEntity getEntityID() {return this;}
     
 }

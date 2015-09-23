@@ -32,6 +32,7 @@ import com.jme3.animation.LoopMode;
 import com.jme3.bounding.BoundingSphere;
 import com.jme3.bounding.BoundingVolume;
 import GameObjects.LevelManager;
+import States.*;
 
 
 
@@ -85,6 +86,9 @@ public class InGameAppState extends AbstractAppState{
       setColor();
       setCamera();
       setGameBoundries();
+      setPath();
+      setBumpers();
+      setBricks();
       setPlayer();
        
     }
@@ -115,19 +119,21 @@ public class InGameAppState extends AbstractAppState{
     private void setGameBoundries(){
         
         //Floor
-        Box floorBox = new Box(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(46.0f, 1.0f, 1.0f));
-        Geometry floorGeom = new Geometry("floor", floorBox);
-        BodyFixture floorFixuture = CreateBodyFixture.CreateBox(Vector3f.ZERO, 46.0f, 1.0f, 0.0f);
+        Box boundry = new Box(new Vector3f(-23.0f, -0.5f, -0.5f), new Vector3f(23.0f, 0.5f, 0.5f));
+        Geometry floorGeom = new Geometry("floor", boundry);
+        BodyFixture floorFixuture = CreateBodyFixture.createBodyFixtureFromSpatial(boundry, Vector3f.ZERO, 0.0f);
         Body floor2D = new Body();
         floor2D.addFixture(floorFixuture);
         floor2D.setMass(Mass.Type.INFINITE);
         Block floor = new Block(10.0f, floorGeom, floor2D, false, BaseGameEntity.ObjectType.BENIGN, null);
         floorGeom.setMaterial(Block.borderMaterial);
         floorGeom.addControl(floor);
+        floorGeom.getLocalTransform().getTranslation().set(23.0f, 0.5f, 0.0f);
+        floor2D.getTransform().setTranslation(23.0f, 0.5f);
         m_LevelManager.RegisterObject("Boundries", (Dyn4RigidBodyControl)floor);
         
         //Left Boundry
-        Box sideBox = new Box(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(1.0f,  25.0f, 1.0f));
+        Box sideBox = new Box(new Vector3f(-0.5f, -12.5f, -0.5f), new Vector3f(0.5f,  12.5f, 0.5f));
         Geometry leftBoxGeom = new Geometry("LeftBorder", sideBox);
         leftBoxGeom.setMaterial(Block.borderMaterial);
         BodyFixture leftFixture = CreateBodyFixture.createBodyFixtureFromSpatial(sideBox, Vector2f.ZERO, 0.0f);
@@ -136,15 +142,17 @@ public class InGameAppState extends AbstractAppState{
         leftBox2D.setMass(Mass.Type.INFINITE);
         Block leftBlock = new Block(10.0f, leftBoxGeom, leftBox2D, false, BaseGameEntity.ObjectType.BENIGN, null);
         leftBoxGeom.addControl(leftBlock);
+        leftBox2D.getTransform().setTranslation(.5, 12.5);
+        leftBoxGeom.getLocalTransform().setTranslation(0.5f, 12.5f, 0.0f);
         m_LevelManager.RegisterObject("Boundries", (Dyn4RigidBodyControl)leftBlock);
         
         //Right Boundry
         Geometry rightBoxGeom = new Geometry("RightBorder", sideBox);
         rightBoxGeom.setMaterial(Block.borderMaterial);
-        rightBoxGeom.getLocalTransform().setTranslation(45.0f, 0.0f, 0.0f);
+        rightBoxGeom.getLocalTransform().setTranslation(45.5f, 12.5f, 0.0f);
         BodyFixture rightFixture = CreateBodyFixture.createBodyFixtureFromSpatial(sideBox, Vector2f.ZERO, 0.0f);
         Body rightBox2D = new Body();
-        rightBox2D.getTransform().setTranslation(45.0, 0.0);
+        rightBox2D.getTransform().setTranslation(45.5, 12.5);
         rightBox2D.addFixture(leftFixture);
         rightBox2D.setMass(Mass.Type.INFINITE);
         Block rightBlock = new Block(10.0f, rightBoxGeom, rightBox2D, false, BaseGameEntity.ObjectType.BENIGN, null);
@@ -152,14 +160,14 @@ public class InGameAppState extends AbstractAppState{
         m_LevelManager.RegisterObject("Boundries", (Dyn4RigidBodyControl)rightBlock);
         
         //Ceiling
-        Geometry ceilingGeom = new Geometry("ceiling", floorBox);
+        Geometry ceilingGeom = new Geometry("ceiling", boundry);
         ceilingGeom.setMaterial(Block.borderMaterial);
-        BodyFixture ceilFixture = CreateBodyFixture.createBodyFixtureFromSpatial(floorBox, Vector2f.ZERO, 0.0f);
+        BodyFixture ceilFixture = CreateBodyFixture.createBodyFixtureFromSpatial(boundry, Vector2f.ZERO, 0.0f);
         Body ceil2D = new Body();
         ceil2D.addFixture(ceilFixture);
         ceil2D.setMass(Mass.Type.INFINITE);
-        ceil2D.getTransform().setTranslation(0.0, 25.0);
-        ceilingGeom.getLocalTransform().setTranslation(new Vector3f(0.0f, 25.0f, 0.0f));
+        ceil2D.getTransform().setTranslation(23.0, 25.5);
+        ceilingGeom.getLocalTransform().setTranslation(new Vector3f(23.0f, 25.5f, 0.0f));
         Block ceiling  = new Block(10.0f, ceilingGeom, ceil2D, false, BaseGameEntity.ObjectType.BENIGN, null);
         ceilingGeom.addControl(ceiling);
         m_LevelManager.RegisterObject("Boundries", (Dyn4RigidBodyControl) ceiling);
@@ -173,7 +181,7 @@ public class InGameAppState extends AbstractAppState{
         Sphere playerSphere = new Sphere(25, 25, 1.0f);
         Geometry playerGeom = new Geometry("Player", playerSphere);
         playerGeom.setMaterial(Block.blueMaterial);
-        playerGeom.getLocalTransform().setTranslation(35.0f, 10.0f, 0.0f);
+        playerGeom.getLocalTransform().setTranslation(35.0f, 5.0f, 0.0f);
         BodyFixture playerFix =  CreateBodyFixture.createBodyFixtureFromSpatial(playerSphere, Vector2f.ZERO);
         Body playerBody = new Body();
         playerBody.addFixture(playerFix);
@@ -188,69 +196,78 @@ public class InGameAppState extends AbstractAppState{
         m_LevelManager.RegisterObject("Player", (Dyn4RigidBodyControl) control);
            
     }
-    /*
-    private void setWorld(){
-        
-         Box boxMesh = new Box(1.0f, 1.0f, 1.0f);
-         Geometry gravityBox = new Geometry("Gravity Box", boxMesh);
-         gravityBox.setMaterial(Block.gravityMaterial);
-         BodyFixture gravityFixture = CreateBodyFixture.createBodyFixtureFromSpatial(boxMesh, Vector2f.ZERO, 0.0f);
-         Body gravityBody = new Body();
-         gravityBody.addFixture(gravityFixture);
-         gravityBody.setMass(Mass.Type.INFINITE);
-         gravityBody.getTransform().setTranslation(0.0, 5.5);
-         GravityBlock gravityControl = new GravityBlock(6.0f, 10.0f, gravityBox, gravityBody, false, null, true);
-         m_MessageCenter.CreateAreaTrigger(gravityControl.getTrigger());
-         m_MessageCenter.AddActor(m_play, gravityControl.getTrigger().getFilter());
-         gravityBox.addControl(gravityControl);
-         gravityBody.setUserData(gravityControl);
-         m_SceneNode.attachChild(gravityBox);
-         m_2Dworld.addBody(gravityBody);
-         
-         
-         
-         Geometry pointMovingBox1 = new Geometry("Point Moving Box", boxMesh);
-         pointMovingBox1.setMaterial(Block.blueMaterial);
-         BodyFixture pointMovingFixture1 = CreateBodyFixture.createBodyFixtureFromSpatial(boxMesh, Vector2f.ZERO, 0.0f);
-         Body pointMovingBody1 = new Body();
-         pointMovingBody1.addFixture(pointMovingFixture1);
-         pointMovingBody1.setMass(Mass.Type.INFINITE);
-         pointMovingBody1.getTransform().setTranslation(8.0, 5.0);
-         MovingBlock moving1 = new MovingBlock(1.5f, pointMovingBox1, pointMovingBody1, true, BaseGameEntity.ObjectType.BLUE_BLOCK, 
-                                               States.ChangingBlock.GetInstance(), 8.0f, 1.0f, LoopMode.Loop);
-         
+    
+    private void setPath(){
+    
          MotionPath path1 = new MotionPath();
-         path1.addWayPoint(new Vector3f(-9.5f, 12.5f, 0.0f));
-         path1.addWayPoint(new Vector3f(-9.5f, 2.0f, 0.0f));
-         path1.enableDebugShape(m_Application.getAssetManager(), m_SceneNode);
-         MotionPath path2 = new MotionPath();
-         path2.addWayPoint(new Vector3f(9.5f, 12.5f, 0.0f));
-         path2.addWayPoint(new Vector3f(9.5f, 2.0f, 0.0f));
-         path2.enableDebugShape(m_Application.getAssetManager(), m_SceneNode);
-         moving1.setPath(path1);
+         path1.addWayPoint(new Vector3f(10.5f, 12.5f, 0.0f));
+         path1.addWayPoint(new Vector3f(10.5f, 2.0f, 0.0f));
+         path1.enableDebugShape(m_LevelManager.getAssetManager(), m_LevelManager.getNode());
          path1.setCycle(true);
-         pointMovingBox1.addControl(moving1);
-         m_SceneNode.attachChild(pointMovingBox1);
-         m_2Dworld.addBody(pointMovingBody1);
-         moving1.getEvent().play();
-         
-        Geometry pointMovingBox2 = new Geometry("Point Moving Box", boxMesh);
-         pointMovingBox2.setMaterial(Block.blueMaterial);
-         BodyFixture pointMovingFixture2 = CreateBodyFixture.createBodyFixtureFromSpatial(boxMesh, Vector2f.ZERO, 0.0f);
-         Body pointMovingBody2 = new Body();
-         pointMovingBody2.addFixture(pointMovingFixture2);
-         pointMovingBody2.setMass(Mass.Type.INFINITE);
-         pointMovingBody2.getTransform().setTranslation(8.0, 5.0);
-         MovingBlock moving2 = new MovingBlock(1.5f, pointMovingBox2, pointMovingBody2, true, BaseGameEntity.ObjectType.BLUE_BLOCK, 
-                                               States.ChangingBlock.GetInstance(), 8.0f, 1.0f, LoopMode.Loop);
-         
-         moving2.setPath(path2);
+         MotionPath path2 = new MotionPath();
+         path2.addWayPoint(new Vector3f(30.5f, 12.5f, 0.0f));
+         path2.addWayPoint(new Vector3f(30.5f, 2.0f, 0.0f));
+         path2.enableDebugShape(m_LevelManager.getAssetManager(), m_LevelManager.getNode());
          path2.setCycle(true);
-         pointMovingBox2.addControl(moving2);
-         m_SceneNode.attachChild(pointMovingBox2);
-         m_2Dworld.addBody(pointMovingBody2);
-         moving2.getEvent().play();
-         
+         MotionPath path3 = new MotionPath();
+         path3.addWayPoint(new Vector3f(10.5f, 17.5f, 0.0f));
+         path3.addWayPoint(new Vector3f(30.5f, 17.5f, 0.0f));
+         path3.enableDebugShape(m_LevelManager.getAssetManager(), m_LevelManager.getNode());
+         path3.setCycle(true);
+         MotionPath path4 = new MotionPath();
+         path4.addWayPoint(new Vector3f(40.5f, 20.5f, 0.0f));
+         path4.addWayPoint(new Vector3f(40.5f, 2.5f, 0.0f));
+         path4.enableDebugShape(m_LevelManager.getAssetManager(), m_LevelManager.getNode());
+         path4.setCycle(true);
+    
+         m_LevelManager.setMotionPath("Path1", path1);
+         m_LevelManager.setMotionPath("Path2", path2);
+         m_LevelManager.setMotionPath("Path3", path3);
+         m_LevelManager.setMotionPath("Path4", path4);
     }
-   */ 
+    
+    private void setBumpers(){
+        
+        Sphere bumperSphere = new Sphere(25, 25, 2.0f);
+        Geometry bumperGeom1 = new Geometry("Bumper1", bumperSphere);
+        bumperGeom1.setMaterial(Block.yellowMaterial);
+        BodyFixture bumperFix1 = CreateBodyFixture.createBodyFixtureFromSpatial(bumperSphere, Vector2f.ZERO);
+        Body bumperBody1 = new Body();
+        bumperBody1.addFixture(bumperFix1);
+        bumperBody1.setMass(Mass.Type.INFINITE);
+        ChangingBumper changeBump = new ChangingBumper(3.0f);
+        Bumper bumper1 = new Bumper(bumperGeom1, bumperBody1, BaseGameEntity.ObjectType.YELLOW_BUMPER, "Bumper1", 1, changeBump);
+        bumperGeom1.addControl(bumper1);
+        bumperBody1.getTransform().setTranslation(4.0, 7.0);
+        bumperGeom1.getLocalTransform().setTranslation(4.0f, 7.0f, 0.0f);
+        bumperBody1.setUserData(bumper1);
+        m_LevelManager.RegisterObject("Bumper", (Dyn4RigidBodyControl) bumper1);
+        
+        
+        Geometry bumperGeom2 = new Geometry("Bumper2", bumperSphere);
+        bumperGeom2.setMaterial(Block.yellowMaterial);
+        BodyFixture bumperFix2 = CreateBodyFixture.createBodyFixtureFromSpatial(bumperSphere, Vector2f.ZERO);
+        Body bumperBody2 = new Body();
+        bumperBody2.addFixture(bumperFix2);
+        bumperBody2.setMass(Mass.Type.INFINITE);
+        MotionPath path = m_LevelManager.getMotionPath("Path4");
+        
+        
+        Bumper bumper2 = new Bumper(bumperGeom2, bumperBody2, BaseGameEntity.ObjectType.YELLOW_BUMPER, "Bumper2", 2, null);
+        MovingBumper moving = new MovingBumper(path, bumper2, LoopMode.Loop);
+        bumper2.setState(moving);
+        bumperGeom2.addControl(bumper2);
+        bumperBody2.getTransform().setTranslation(40.5, 20.5);
+        bumperGeom2.getLocalTransform().setTranslation(40.5f, 20.5f, 0.0f);
+        bumperBody2.setUserData(bumper2);
+        moving.getEvent().play();
+        m_LevelManager.RegisterObject("Bumper", (Dyn4RigidBodyControl) bumper2);
+       
+    }
+    
+    //TODO: Implement bricks and add win/lose.
+    private void setBricks(){
+    
+    }
+    
 }
