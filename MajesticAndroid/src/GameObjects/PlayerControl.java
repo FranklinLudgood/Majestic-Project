@@ -25,7 +25,7 @@ import States.StateInterface;
 import com.jme3.scene.Spatial;
 import org.dyn4j.dynamics.Body;
 import MessageSystem.AreaTriggered;
-import org.dyn4j.dynamics.Force;
+//import org.dyn4j.dynamics.Force;
 import org.dyn4j.geometry.Vector2;
 
 
@@ -38,7 +38,7 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
     public static final float scale = 1.0f;
     public static final float maxSpeed = 10.0f;
     public static final float jumpScale = 30.0f;
-    public static final float gravityDelay = 2.0f;
+    public static final float gravityDelay = 2.5f;
     
     
     private StateInterface m_state;
@@ -250,8 +250,8 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
         if(gravityTimer <= 0.0f){
             Vector3f position = m_3dSpatial.getWorldTranslation();
             Vector2f force = trigger.getPosition().subtract(position.x, position.y);
-            float distanceSquared = force.length();
-            force.multLocal((GravityBlock.GravityConstant/distanceSquared));
+            //float distanceSquared = force.length();
+            force.multLocal((GravityBlock.GravityConstant));
             m_2Dbody.applyImpulse(new Vector2((double) force.x, (double) force.y));
             gravityTimer = gravityDelay;
         }

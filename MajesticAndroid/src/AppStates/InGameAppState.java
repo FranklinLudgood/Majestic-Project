@@ -33,6 +33,7 @@ import com.jme3.bounding.BoundingSphere;
 import com.jme3.bounding.BoundingVolume;
 import GameObjects.LevelManager;
 import States.*;
+import com.jme3.scene.Spatial;
 
 
 
@@ -194,6 +195,7 @@ public class InGameAppState extends AbstractAppState{
         GameInput.GameInputManager.GetInstance().register((GameTouchListner)control);
         playerGeom.addControl(control);
         m_LevelManager.RegisterObject("Player", (Dyn4RigidBodyControl) control);
+        m_MessageCenter.AddActor(control, GravityBlock.FILTER);
            
     }
     
@@ -267,6 +269,69 @@ public class InGameAppState extends AbstractAppState{
     
     //TODO: Implement bricks and add win/lose.
     private void setBricks(){
+        
+         Box box = new Box(new Vector3f(-2.0f, -0.5f, -0.5f), new Vector3f(2.0f, 0.5f, 0.5f));
+         Box pointBox = new Box(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector3f(0.5f, 0.5f, 0.5f));
+        
+         //set up benin blocks
+         Geometry blockGeom1 = new Geometry("Block1", box);
+         blockGeom1.setMaterial(Block.borderMaterial);
+         BodyFixture blockFix1 = CreateBodyFixture.createBodyFixtureFromSpatial(box, Vector2f.ZERO, 0.0f);
+         Body blockBody1 = new Body();
+         blockBody1.addFixture(blockFix1);
+         blockBody1.setMass(Mass.Type.INFINITE);
+         
+         MovingBlock block1 = new MovingBlock(10.0f, blockGeom1, blockBody1, false,
+                                                BaseGameEntity.ObjectType.BENIGN, null, 
+                                                10.0f, 0.5f, LoopMode.Loop);
+        
+        blockGeom1.addControl(block1);
+        blockGeom1.getLocalTransform().setTranslation(10.5f, 12.5f, 0.0f);
+        blockBody1.getTransform().setTranslation(10.5, 12.5);
+        MotionPath path1 = m_LevelManager.getMotionPath("Path1");
+        block1.getEvent().setPath(path1);
+        block1.getEvent().play();
+        m_LevelManager.RegisterObject("Benin", (Dyn4RigidBodyControl) block1);
+        
+        
+         Geometry blockGeom2 = new Geometry("Block2", box);
+         blockGeom2.setMaterial(Block.borderMaterial);
+         BodyFixture blockFix2 = CreateBodyFixture.createBodyFixtureFromSpatial(box, Vector2f.ZERO, 0.0f);
+         Body blockBody2 = new Body();
+         blockBody2.addFixture(blockFix2);
+         blockBody2.setMass(Mass.Type.INFINITE);
+         
+         MovingBlock block2 = new MovingBlock(10.0f, blockGeom2, blockBody2, false,
+                                                BaseGameEntity.ObjectType.BENIGN, null, 
+                                                10.0f, 0.5f, LoopMode.Loop);
+        
+        blockGeom2.addControl(block2);
+        blockGeom2.getLocalTransform().setTranslation(30.5f, 12.5f, 0.0f);
+        blockBody2.getTransform().setTranslation(30.5, 12.5);
+        MotionPath path2 = m_LevelManager.getMotionPath("Path2");
+        block2.getEvent().setPath(path2);
+        block2.getEvent().play();
+        m_LevelManager.RegisterObject("Benin", (Dyn4RigidBodyControl) block2);
+        
+        //set up gravity blocks
+        Geometry gravityGeom1 = new Geometry("Gavity1", pointBox);
+        gravityGeom1.setMaterial(Block.gravityMaterial);
+        BodyFixture gravityFix1 = CreateBodyFixture.createBodyFixtureFromSpatial(pointBox, Vector2f.ZERO, 0.0f);
+        Body gravityBody1 = new Body();
+        gravityBody1.addFixture(gravityFix1);
+        gravityBody1.setMass(Mass.Type.INFINITE);
+        gravityGeom1.getLocalTransform().setTranslation(22.0f, 6.0f, 0.0f);
+        gravityBody1.getTransform().setTranslation(22.0, 6.0);
+        GravityBlock gravityBlock1 = new GravityBlock(10.0f, 10.0f, gravityGeom1, gravityBody1, false, null, true);
+        gravityGeom1.addControl(gravityBlock1);
+        
+        m_LevelManager.RegisterObject("Gravity", (Dyn4RigidBodyControl) gravityBlock1);
+        m_MessageCenter.CreateAreaTrigger(gravityBlock1.getTrigger());
+        
+        //set up point blocks
+        
+        
+        
     
     }
     

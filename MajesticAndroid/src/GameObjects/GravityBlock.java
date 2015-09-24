@@ -14,7 +14,7 @@ import org.dyn4j.dynamics.Body;
 public class GravityBlock extends Block {
     
     public static final String FILTER = "GravityBlock";
-    public static final float GravityConstant = 25.0f;
+    public static final float GravityConstant = 50.0f;
     
     private AreaTrigger m_trigger;
     
