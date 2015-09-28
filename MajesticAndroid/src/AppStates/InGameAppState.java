@@ -25,7 +25,7 @@ import com.jme3.cinematic.MotionPath;
 import GameObjects.*;
 import MessageSystem.GameContactListner;
 import States.BallFalling;
-import Utils.CreateBodyFixture;
+import Utils.*;
 import com.jme3.math.ColorRGBA;
 import MessageSystem.*;
 import com.jme3.animation.LoopMode;
@@ -42,6 +42,8 @@ public class InGameAppState extends AbstractAppState{
     
     private MessageCenter m_MessageCenter;
     private LevelManager m_LevelManager;
+    private Camera m_playerCamera;
+    private PlayerControl m_Control;
      
     
      @Override
@@ -50,6 +52,8 @@ public class InGameAppState extends AbstractAppState{
        m_MessageCenter.update(tpf);
        double elapsedTime = (double) tpf;
        LevelManager.GetInstance().getWorld().update(elapsedTime);
+       Vector3f position = m_Control.getSpatial().getLocalTranslation();
+       m_playerCamera.lookAt(position, Vector3f.UNIT_Y);
     }
     
    
@@ -96,9 +100,9 @@ public class InGameAppState extends AbstractAppState{
     
     private void setCamera(){
         
-        Camera camera = m_LevelManager.getCamera("DefaultCam");
-        camera.setLocation(new Vector3f(25.5f, 12.5f, 35.0f));
-        camera.lookAt(new Vector3f(25.0f, 12.5f, 0.0f), Vector3f.UNIT_Y);
+        m_playerCamera = m_LevelManager.getCamera("DefaultCam");
+        m_playerCamera.setLocation(new Vector3f(25.5f, 12.5f, 35.0f));
+        m_playerCamera.lookAt(new Vector3f(25.0f, 12.5f, 0.0f), Vector3f.UNIT_Y);
     
     }
     
@@ -179,23 +183,12 @@ public class InGameAppState extends AbstractAppState{
       
     private void setPlayer(){
         
-        Sphere playerSphere = new Sphere(25, 25, 1.0f);
-        Geometry playerGeom = new Geometry("Player", playerSphere);
-        playerGeom.setMaterial(Block.blueMaterial);
-        playerGeom.getLocalTransform().setTranslation(35.0f, 5.0f, 0.0f);
-        BodyFixture playerFix =  CreateBodyFixture.createBodyFixtureFromSpatial(playerSphere, Vector2f.ZERO);
-        Body playerBody = new Body();
-        playerBody.addFixture(playerFix);
-        playerBody.setMass();
-        playerBody.getTransform().setTranslation(35.0, 10.0);
-        PlayerControl control = new PlayerControl(playerGeom, playerBody);
-        control.setState(BallFalling.GetInstance());
-        control.getBody().setUserData(control);
-        GameInput.GameInputManager.GetInstance().register((GameOrientationListener)control);
-        GameInput.GameInputManager.GetInstance().register((GameTouchListner)control);
-        playerGeom.addControl(control);
-        m_LevelManager.RegisterObject("Player", (Dyn4RigidBodyControl) control);
-        m_MessageCenter.AddActor(control, GravityBlock.FILTER);
+       m_Control = CreateGameObjects.MakePlayerBall("PlayerBall", new Vector3f(35.0f, 5.0f, 0.0f), 1.0f);
+        
+        /*
+        m_LevelManager.RegisterObject("Player", (Dyn4RigidBodyControl) m_Control);
+        m_MessageCenter.AddActor(m_Control, GravityBlock.FILTER);
+        */ 
            
     }
     
@@ -230,6 +223,10 @@ public class InGameAppState extends AbstractAppState{
     
     private void setBumpers(){
         
+        CreateGameObjects.CreateStationaryBlueBumper("Bumper1", "Bumper", new Vector3f(4.0f, 7.0f, 0.0f), 2.0f, 1);
+        CreateGameObjects.CreateStationaryYellowBumper("Bumper2", "Bumper", new Vector3f(20.0f, 7.0f, 0.0f), 2.0f, 2);
+        CreateGameObjects.CreateMovingYellowBumper("Bumper3", "Bumper", "Path4", LoopMode.Loop, 2.0f, 3);
+        /*
         Sphere bumperSphere = new Sphere(25, 25, 2.0f);
         Geometry bumperGeom1 = new Geometry("Bumper1", bumperSphere);
         bumperGeom1.setMaterial(Block.yellowMaterial);
@@ -264,55 +261,27 @@ public class InGameAppState extends AbstractAppState{
         bumperBody2.setUserData(bumper2);
         moving.getEvent().play();
         m_LevelManager.RegisterObject("Bumper", (Dyn4RigidBodyControl) bumper2);
-       
+       */
     }
     
-    //TODO: Implement bricks and add win/lose.
+    
     private void setBricks(){
         
-         Box box = new Box(new Vector3f(-2.0f, -0.5f, -0.5f), new Vector3f(2.0f, 0.5f, 0.5f));
-         Box pointBox = new Box(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector3f(0.5f, 0.5f, 0.5f));
+        Box box = new Box(new Vector3f(-2.0f, -0.5f, -0.5f), new Vector3f(2.0f, 0.5f, 0.5f));
+        Box staticBox = new Box(3.5f, 0.5f, 0.5f);
+        CreateGameObjects.CreateBeninBlockDynamic("Block1", "Benin", "Path1", box, 10.0f, 0.5f, LoopMode.Loop);
+        CreateGameObjects.CreateBeninBlockDynamic("Block2", "Benin", "Path2", box, 10.0f, 0.5f, LoopMode.Loop);
         
-         //set up benin blocks
-         Geometry blockGeom1 = new Geometry("Block1", box);
-         blockGeom1.setMaterial(Block.borderMaterial);
-         BodyFixture blockFix1 = CreateBodyFixture.createBodyFixtureFromSpatial(box, Vector2f.ZERO, 0.0f);
-         Body blockBody1 = new Body();
-         blockBody1.addFixture(blockFix1);
-         blockBody1.setMass(Mass.Type.INFINITE);
-         
-         MovingBlock block1 = new MovingBlock(10.0f, blockGeom1, blockBody1, false,
-                                                BaseGameEntity.ObjectType.BENIGN, null, 
-                                                10.0f, 0.5f, LoopMode.Loop);
+        CreateGameObjects.CreateBeninBlockStatic("Block3", "Benin", new Vector3f(5.0f, 12.5f, 0.0f), staticBox);
+        CreateGameObjects.CreateBeninBlockStatic("Block4", "Benin", new Vector3f(25.0f, 12.5f, 0.0f), staticBox);
         
-        blockGeom1.addControl(block1);
-        blockGeom1.getLocalTransform().setTranslation(10.5f, 12.5f, 0.0f);
-        blockBody1.getTransform().setTranslation(10.5, 12.5);
-        MotionPath path1 = m_LevelManager.getMotionPath("Path1");
-        block1.getEvent().setPath(path1);
-        block1.getEvent().play();
-        m_LevelManager.RegisterObject("Benin", (Dyn4RigidBodyControl) block1);
+        CreateGameObjects.CreateYellowPointBlockStatic("Block5", "PointBlock", new Vector3f(5.5f, 14.0f, 0.0f));
+        CreateGameObjects.CreateBluePointBlockStatic("Block6", "PointBlock", new Vector3f(27.0f, 15.0f, 0.0f));
+        CreateGameObjects.CreateBluePointBlockDynamic("Block7", "PointBlock", "Path3", 10.0f, 0.5f, LoopMode.Loop);
         
+        /*
         
-         Geometry blockGeom2 = new Geometry("Block2", box);
-         blockGeom2.setMaterial(Block.borderMaterial);
-         BodyFixture blockFix2 = CreateBodyFixture.createBodyFixtureFromSpatial(box, Vector2f.ZERO, 0.0f);
-         Body blockBody2 = new Body();
-         blockBody2.addFixture(blockFix2);
-         blockBody2.setMass(Mass.Type.INFINITE);
-         
-         MovingBlock block2 = new MovingBlock(10.0f, blockGeom2, blockBody2, false,
-                                                BaseGameEntity.ObjectType.BENIGN, null, 
-                                                10.0f, 0.5f, LoopMode.Loop);
-        
-        blockGeom2.addControl(block2);
-        blockGeom2.getLocalTransform().setTranslation(30.5f, 12.5f, 0.0f);
-        blockBody2.getTransform().setTranslation(30.5, 12.5);
-        MotionPath path2 = m_LevelManager.getMotionPath("Path2");
-        block2.getEvent().setPath(path2);
-        block2.getEvent().play();
-        m_LevelManager.RegisterObject("Benin", (Dyn4RigidBodyControl) block2);
-        
+        /*
         //set up gravity blocks
         Geometry gravityGeom1 = new Geometry("Gavity1", pointBox);
         gravityGeom1.setMaterial(Block.gravityMaterial);
@@ -327,7 +296,7 @@ public class InGameAppState extends AbstractAppState{
         
         m_LevelManager.RegisterObject("Gravity", (Dyn4RigidBodyControl) gravityBlock1);
         m_MessageCenter.CreateAreaTrigger(gravityBlock1.getTrigger());
-        
+        */
         //set up point blocks
         
         

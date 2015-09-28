@@ -10,6 +10,7 @@ import States.BlockInterface;
 import com.jme3.material.Material;
 import com.jme3.scene.Spatial;
 import org.dyn4j.dynamics.Body;
+import GameObjects.LevelManager;
 
 
 public class Block extends Dyn4RigidBodyControl implements BaseGameEntity, CollisionResponse {
@@ -88,43 +89,16 @@ public class Block extends Dyn4RigidBodyControl implements BaseGameEntity, Colli
     public void beginCollisionEvent(CollisionEvent event) {
         
         BaseGameEntity entity = event.getBaseEntity();
-        if(entity != null){
-            switch(entity.getObjectType()){
-                
-                case BLUE_BALL:
-                    if(m_type == BaseGameEntity.ObjectType.BLUE_BLOCK){
-                      //need to send message  
-                    }
-                    break;
-                    
-                case YELLOW_BALL:
-                    if(m_type == BaseGameEntity.ObjectType.YELLOW_BLOCK){
-                       //need to send message
-                    }
-                    break;       
-            }
-        }
+        if(entity != null)
+            ResolveCollision(entity.getObjectType());
+        
     }
 
     public void persistCollisionEvent(CollisionEvent event) {
         BaseGameEntity entity = event.getBaseEntity();
-        if(entity != null){
-            switch(entity.getObjectType()){
-                
-                case BLUE_BALL:
-                    if(m_type == BaseGameEntity.ObjectType.BLUE_BLOCK){
-                      //need to send message  
-                    }
-                    break;
-                    
-                case YELLOW_BALL:
-                    if(m_type == BaseGameEntity.ObjectType.YELLOW_BLOCK){
-                       //need to send message
-                    }
-                    break;       
-            }
-        }
-       
+        if(entity != null)
+           ResolveCollision(entity.getObjectType());
+            
     }
 
     @Override
@@ -133,5 +107,23 @@ public class Block extends Dyn4RigidBodyControl implements BaseGameEntity, Colli
     }
 
     public BaseGameEntity getEntityID() { return this; }
+    
+    
+    private void ResolveCollision(BaseGameEntity.ObjectType type){
+    
+        switch(type){
+            case BLUE_BALL:
+                    if(m_type == BaseGameEntity.ObjectType.BLUE_BLOCK){
+                      LevelManager.GetInstance().RemoveObjectFromAll(this);
+                    }
+                  break;
+                    
+                case YELLOW_BALL:
+                    if(m_type == BaseGameEntity.ObjectType.YELLOW_BLOCK){
+                       LevelManager.GetInstance().RemoveObjectFromAll(this);
+                    }
+                   break;       
+        }
+    }
         
 }

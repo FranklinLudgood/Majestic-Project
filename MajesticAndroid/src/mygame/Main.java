@@ -30,8 +30,8 @@ public class Main extends SimpleApplication {
 
        
         //setting fly camera
-        flyCam.setEnabled(true);
-        flyCam.setMoveSpeed(5.0f);
+        flyCam.setEnabled(false);
+        //flyCam.setMoveSpeed(5.0f);
         
         
         LevelManager.GetInstance().setCamera("DefaultCam", cam);

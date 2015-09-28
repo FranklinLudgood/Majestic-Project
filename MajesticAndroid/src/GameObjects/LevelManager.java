@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import org.dyn4j.dynamics.World;
 import com.jme3.renderer.RenderManager;
 import com.jme3.asset.AssetManager;
+import java.util.Collection;
+import java.util.Set;
 
 //TODO: Finish this class.
 public class LevelManager implements BaseGameEntity {
@@ -159,6 +161,7 @@ public class LevelManager implements BaseGameEntity {
     public void RemoveObject(String groupName, Dyn4RigidBodyControl body){
         
         m_2Dworld.removeBody(body.getBody());
+        m_SceneNode.detachChild(body.getSpatial());
         if(m_gameObjects.containsKey(groupName) == true){
           BaseGameEntity entity = (BaseGameEntity)body;
           if(entity != null){
@@ -176,6 +179,34 @@ public class LevelManager implements BaseGameEntity {
             List<Spatial> list = m_Spatials.get(groupName);
             list.remove(body.getSpatial());
         }
+    }
+    
+    public void RemoveObjectFromAll(Dyn4RigidBodyControl body){
+    
+        m_2Dworld.removeBody(body.getBody());
+        m_SceneNode.detachChild(body.getSpatial());
+        
+        BaseGameEntity entity = (BaseGameEntity) body;
+       if(m_gameObjects.containsValue(entity) == true){
+           Set<String> list =  m_gameObjects.keySet();
+           for(int i = 0; i < list.size(); ++i)
+               m_gameObjects.get((String)list.toArray()[i]).remove(entity);
+          }
+       
+    
+      if(m_inGameObjects.containsValue(body) == true){
+          Set<String> list = m_inGameObjects.keySet();
+          for(int i = 0; i < list.size(); ++i)
+              m_inGameObjects.get((String) list.toArray()[i]).remove(body);
+      }
+      
+      
+      if(m_Spatials.containsValue(body.getSpatial()) == true){
+          Set<String> list = m_Spatials.keySet();
+          for(int i = 0; i < list.size(); ++i)
+              m_Spatials.get((String) list.toArray()[i]).remove(body.getSpatial());
+      }
+      
     }
     
     public List<Dyn4RigidBodyControl> getRigidBodys(String groupName){

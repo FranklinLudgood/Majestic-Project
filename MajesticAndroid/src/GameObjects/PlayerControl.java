@@ -250,7 +250,6 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
         if(gravityTimer <= 0.0f){
             Vector3f position = m_3dSpatial.getWorldTranslation();
             Vector2f force = trigger.getPosition().subtract(position.x, position.y);
-            //float distanceSquared = force.length();
             force.multLocal((GravityBlock.GravityConstant));
             m_2Dbody.applyImpulse(new Vector2((double) force.x, (double) force.y));
             gravityTimer = gravityDelay;
