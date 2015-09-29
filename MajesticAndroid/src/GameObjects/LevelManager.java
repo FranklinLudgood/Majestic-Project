@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import org.dyn4j.dynamics.World;
 import com.jme3.renderer.RenderManager;
 import com.jme3.asset.AssetManager;
-import java.util.Collection;
+import com.jme3.niftygui.NiftyJmeDisplay;
+import com.jme3.renderer.ViewPort;
+//import java.util.Collection;
 import java.util.Set;
 
 //TODO: Finish this class.
@@ -35,6 +37,8 @@ public class LevelManager implements BaseGameEntity {
     private Node m_SceneNode;
     private RenderManager m_RenderManager;
     private AssetManager m_AssetManager;
+    private NiftyJmeDisplay m_niftyDisplay;
+    private ViewPort m_guiViewPort;
     
     
     private static LevelManager m_levelManager;
@@ -74,6 +78,12 @@ public class LevelManager implements BaseGameEntity {
     public void setAssetManger(AssetManager manager){m_AssetManager = manager;}
     public AssetManager getAssetManager(){return m_AssetManager;}
     
+    
+    public void setNiftyJmeDisplay(NiftyJmeDisplay display){m_niftyDisplay = display;}
+    public NiftyJmeDisplay getNiftyJmeDisplay(){return m_niftyDisplay;}
+    
+    public void setGuiViewPort(ViewPort guiViewPort){ m_guiViewPort = guiViewPort;}
+    public ViewPort getGuiViewPort(){return m_guiViewPort;}
     
     //TODO: finish this function
     public void LoadLevel(String fileName){

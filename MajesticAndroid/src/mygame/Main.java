@@ -6,12 +6,14 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.math.Vector3f;
+//import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import AppStates.InGameAppState;
+import AppStates.OutOfGameState;
 import com.jme3.input.controls.TouchTrigger;
 import GameInput.GameInputManager;
 import GameObjects.LevelManager;
+import com.jme3.niftygui.NiftyJmeDisplay;
 
 
 public class Main extends SimpleApplication {
@@ -33,6 +35,13 @@ public class Main extends SimpleApplication {
         flyCam.setEnabled(false);
         //flyCam.setMoveSpeed(5.0f);
         
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager,
+                                                          inputManager,
+                                                          audioRenderer,
+                                                          guiViewPort);
+        
+        guiViewPort.addProcessor(niftyDisplay);
+        
         
         LevelManager.GetInstance().setCamera("DefaultCam", cam);
         LevelManager.GetInstance().setApplication(this);
@@ -40,10 +49,13 @@ public class Main extends SimpleApplication {
         LevelManager.GetInstance().setSceneNode(rootNode);
         LevelManager.GetInstance().setAssetManger(assetManager);
         
-        //GUINode guiNode
+        
         
         //Create and intialize InGameAppState
-        InGameAppState state = new InGameAppState();
+        //InGameAppState state = new InGameAppState();
+        //stateManager.attach(state);
+        
+        OutOfGameState state = new OutOfGameState();
         stateManager.attach(state);
         
         
