@@ -25,7 +25,7 @@ import States.StateInterface;
 import com.jme3.scene.Spatial;
 import org.dyn4j.dynamics.Body;
 import MessageSystem.AreaTriggered;
-//import org.dyn4j.dynamics.Force;
+import MessageSystem.GameUpdate;
 import org.dyn4j.geometry.Vector2;
 
 
@@ -190,22 +190,22 @@ public class PlayerControl extends Dyn4RigidBodyControl implements GameOrientati
     private void calculateScore(){
         m_Score+= m_Multipler * Block.basePointBlock;
         ++m_Multipler;
-        GameBroadCast scoreCast = new GameBroadCast(null, new Integer(m_Score), GameBroadCast.BroadCastType.UPDATE_SCORE);
-        GameBroadCast multiplyerCast = new GameBroadCast(null, new Integer(m_Multipler), GameBroadCast.BroadCastType.UPDATE_MULTIPLER);
-        MessageCenter.GetInstance().SendBroadCast(scoreCast);
-        MessageCenter.GetInstance().SendBroadCast(multiplyerCast);
+        GameUpdate update = new GameUpdate(m_Score, m_Multipler, m_CurrentHealth);
+        GameBroadCast broadCast = new GameBroadCast(null, update, GameBroadCast.BroadCastType.UPDATE_GAME);
+        MessageCenter.GetInstance().SendBroadCast(broadCast);
     }
     
     private void calculateHealth(){
         
           --m_CurrentHealth;
+          GameUpdate update = new GameUpdate(m_Score, m_Multipler, m_CurrentHealth); 
                             
           if(m_CurrentHealth <= 0){
-              GameBroadCast cast = new GameBroadCast(null, null, GameBroadCast.BroadCastType.GAME_LOST);
+              GameBroadCast cast = new GameBroadCast(null, update, GameBroadCast.BroadCastType.GAME_LOST);
               MessageCenter.GetInstance().SendBroadCast(cast);
           }
           else{
-              GameBroadCast cast = new GameBroadCast(null, new Integer(m_CurrentHealth), GameBroadCast.BroadCastType.UPDATE_HEALTH);
+              GameBroadCast cast = new GameBroadCast(null, update, GameBroadCast.BroadCastType.UPDATE_GAME);
               MessageCenter.GetInstance().SendBroadCast(cast);
           }
     

@@ -155,7 +155,7 @@ public class InGameAppState extends AbstractAppState{
         Geometry rightBoxGeom = new Geometry("RightBorder", sideBox);
         rightBoxGeom.setMaterial(Block.borderMaterial);
         rightBoxGeom.getLocalTransform().setTranslation(45.5f, 12.5f, 0.0f);
-        BodyFixture rightFixture = CreateBodyFixture.createBodyFixtureFromSpatial(sideBox, Vector2f.ZERO, 0.0f);
+        //BodyFixture rightFixture = CreateBodyFixture.createBodyFixtureFromSpatial(sideBox, Vector2f.ZERO, 0.0f);
         Body rightBox2D = new Body();
         rightBox2D.getTransform().setTranslation(45.5, 12.5);
         rightBox2D.addFixture(leftFixture);
@@ -277,8 +277,8 @@ public class InGameAppState extends AbstractAppState{
         
         CreateGameObjects.CreateYellowPointBlockStatic("Block5", "PointBlock", new Vector3f(5.5f, 14.0f, 0.0f));
         CreateGameObjects.CreateBluePointBlockStatic("Block6", "PointBlock", new Vector3f(27.0f, 15.0f, 0.0f));
-        CreateGameObjects.CreateBluePointBlockDynamic("Block7", "PointBlock", "Path3", 10.0f, 0.5f, LoopMode.Loop);
-        
+        //CreateGameObjects.CreateBluePointBlockDynamic("Block7", "PointBlock", "Path3", 10.0f, 0.5f, LoopMode.Loop);
+        CreateGameObjects.CreateChangingBlockDynamic("Block7", "PointBlock", "Path3", 3.0f, 10.0f, 0.5f, LoopMode.Loop);
         /*
         
         /*

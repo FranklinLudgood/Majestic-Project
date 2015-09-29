@@ -26,6 +26,7 @@ import GameObjects.MovingBlock;
 import MessageSystem.MessageCenter;
 import States.ChangingBumper;
 import States.MovingBumper;
+import States.ChangingBlock;
 import com.jme3.animation.LoopMode;
 import com.jme3.cinematic.MotionPath;
 import java.util.List;
@@ -202,6 +203,7 @@ public class CreateGameObjects {
    }
    
    
+   
    public static Block CreateBeninBlockStatic(String Name, String Filter,  
                         Vector3f position, Box box){
        
@@ -213,6 +215,7 @@ public class CreateGameObjects {
         blockBody.setMass(Mass.Type.INFINITE);
         Block block = new Block(10.0f, blockGeom, blockBody, false, BaseGameEntity.ObjectType.BENIGN, null);
         blockGeom.addControl(block);
+        blockBody.setUserData(block);
         blockGeom.getLocalTransform().setTranslation(position);
         blockBody.getTransform().setTranslation((double) position.x, (double) position.y);
         LevelManager.GetInstance().RegisterObject(Filter, (Dyn4RigidBodyControl) block);
@@ -248,6 +251,7 @@ public class CreateGameObjects {
         blockGeom.addControl(block);
         blockGeom.getLocalTransform().setTranslation(position);
         blockBody.getTransform().setTranslation((double) position.x, (double) position.y);
+        blockBody.setUserData(block);
         block.getEvent().setPath(path);
         block.getEvent().play();
         LevelManager.GetInstance().RegisterObject(Filter, (Dyn4RigidBodyControl) block);
@@ -260,7 +264,7 @@ public class CreateGameObjects {
    public static GravityBlock CreateGravityBlock(String Name, String Filter,  
                         Vector3f position, float radius){
    
-        //Box box = new Box(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector3f(0.5f, 0.5f, 0.5f));
+         
         Geometry gravityGeom = new Geometry(Name, pointBox);
         gravityGeom.setMaterial(Block.gravityMaterial);
         BodyFixture gravityFix = CreateBodyFixture.createBodyFixtureFromSpatial(pointBox, Vector2f.ZERO, 0.0f);
@@ -281,7 +285,7 @@ public class CreateGameObjects {
    
    public static Block CreateBluePointBlockStatic(String Name, String Filter, Vector3f position){
        
-       //Box box = new Box(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector3f(0.5f, 0.5f, 0.5f));
+       
        Geometry pointGeom = new Geometry(Name, pointBox);
        pointGeom.setMaterial(Block.blueMaterial);
        BodyFixture pointFix = CreateBodyFixture.createBodyFixtureFromSpatial(pointBox, Vector2f.ZERO, 0.0f);
@@ -323,7 +327,6 @@ public class CreateGameObjects {
                         String pathName, float pathDuration, float speed, 
                                                                 LoopMode loop){
        
-       //Box box = new Box(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector3f(0.5f, 0.5f, 0.5f));
          Geometry blockGeom = new Geometry(Name, pointBox);
          blockGeom.setMaterial(Block.yellowMaterial);
          BodyFixture blockFix = CreateBodyFixture.createBodyFixtureFromSpatial(pointBox, Vector2f.ZERO, 0.0f);
@@ -345,6 +348,7 @@ public class CreateGameObjects {
         blockGeom.addControl(block);
         blockGeom.getLocalTransform().setTranslation(position);
         blockBody.getTransform().setTranslation((double) position.x, (double) position.y);
+        blockBody.setUserData(block);
         block.getEvent().setPath(path);
         block.getEvent().play();
         LevelManager.GetInstance().RegisterObject(Filter, (Dyn4RigidBodyControl) block);
@@ -359,7 +363,7 @@ public class CreateGameObjects {
                         String pathName, float pathDuration, float speed, 
                                                                 LoopMode loop){
        
-         //Box box = new Box(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector3f(0.5f, 0.5f, 0.5f));
+         
          Geometry blockGeom = new Geometry(Name, pointBox);
          blockGeom.setMaterial(Block.blueMaterial);
          BodyFixture blockFix = CreateBodyFixture.createBodyFixtureFromSpatial(pointBox, Vector2f.ZERO, 0.0f);
@@ -381,6 +385,7 @@ public class CreateGameObjects {
         blockGeom.addControl(block);
         blockGeom.getLocalTransform().setTranslation(position);
         blockBody.getTransform().setTranslation((double) position.x, (double) position.y);
+        blockBody.setUserData(block);
         block.getEvent().setPath(path);
         block.getEvent().play();
         LevelManager.GetInstance().RegisterObject(Filter, (Dyn4RigidBodyControl) block);
@@ -388,6 +393,39 @@ public class CreateGameObjects {
         
         return block;
    
+   }
+   
+   public static Block CreateChangingBlockDynamic(String Name, String Filter,  
+                        String pathName, float delay, float pathDuration, float speed, 
+                                                                LoopMode loop){
+        Geometry blockGeom = new Geometry(Name, pointBox);
+         blockGeom.setMaterial(Block.blueMaterial);
+         BodyFixture blockFix = CreateBodyFixture.createBodyFixtureFromSpatial(pointBox, Vector2f.ZERO, 0.0f);
+         Body blockBody = new Body();
+         blockBody.addFixture(blockFix);
+         blockBody.setMass(Mass.Type.INFINITE);
+         
+         MovingBlock block = new MovingBlock(delay, blockGeom, blockBody, true,
+                                                BaseGameEntity.ObjectType.BLUE_BLOCK, ChangingBlock.GetInstance(), 
+                                                pathDuration, speed, loop);
+         
+          MotionPath path = LevelManager.GetInstance().getMotionPath(pathName);
+        
+          if(path == null)
+             return null;
+         
+        Vector3f position = path.getWayPoint(0);
+        
+        blockGeom.addControl(block);
+        blockGeom.getLocalTransform().setTranslation(position);
+        blockBody.getTransform().setTranslation((double) position.x, (double) position.y);
+        blockBody.setUserData(block);
+        block.getEvent().setPath(path);
+        block.getEvent().play();
+        LevelManager.GetInstance().RegisterObject(Filter, (Dyn4RigidBodyControl) block);
+        
+        
+        return block;
    }
      
 }
