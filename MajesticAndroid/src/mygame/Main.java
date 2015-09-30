@@ -12,7 +12,10 @@ import AppStates.InGameAppState;
 import AppStates.OutOfGameState;
 import com.jme3.input.controls.TouchTrigger;
 import GameInput.GameInputManager;
+import GameObjects.Block;
 import GameObjects.LevelManager;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.niftygui.NiftyJmeDisplay;
 
 
@@ -42,13 +45,12 @@ public class Main extends SimpleApplication {
         
         guiViewPort.addProcessor(niftyDisplay);
         
-        
         LevelManager.GetInstance().setCamera("DefaultCam", cam);
         LevelManager.GetInstance().setApplication(this);
         LevelManager.GetInstance().setRenderManager(renderManager);
         LevelManager.GetInstance().setSceneNode(rootNode);
         LevelManager.GetInstance().setAssetManger(assetManager);
-        
+        setColor();
         
         
         //Create and intialize InGameAppState
@@ -69,5 +71,20 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
+    }
+    
+    private void setColor(){
+    
+        Block.borderMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Block.borderMaterial.setColor("Color", ColorRGBA.Gray);
+        
+        Block.blueMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Block.blueMaterial.setColor("Color", ColorRGBA.Blue);
+        
+        Block.yellowMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Block.yellowMaterial.setColor("Color", ColorRGBA.Yellow);
+        
+        Block.gravityMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Block.gravityMaterial.setColor("Color", ColorRGBA.Pink);
     }
 }

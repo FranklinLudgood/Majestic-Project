@@ -85,6 +85,37 @@ public class LevelManager implements BaseGameEntity {
     public void setGuiViewPort(ViewPort guiViewPort){ m_guiViewPort = guiViewPort;}
     public ViewPort getGuiViewPort(){return m_guiViewPort;}
     
+    public void ClearAll(){
+        
+        m_inGameObjects.clear();
+        m_gameObjects.clear();
+        m_Spatials.clear();
+        m_Cameras.clear();
+        m_Paths.clear();
+        m_Events.clear();
+        m_2Dworld.removeAllBodiesAndJoints();
+        m_SceneNode.detachAllChildren();
+    
+         
+    }
+    
+    
+    public void ClearCamera(){ m_Cameras.clear();}
+    
+    public void ClearInGameObjects(){m_inGameObjects.clear();}
+    
+    public void ClearGameObjects(){m_gameObjects.clear();}
+    
+    public void ClearSpatials(){m_Spatials.clear();}
+    
+    public void ClearPaths(){m_Paths.clear();}
+    
+    public void ClearEvents(){m_Events.clear();}
+    
+    public void ClearPhysics(){m_2Dworld.removeAllBodiesAndJoints();}
+    
+    public void ClearScene(){m_SceneNode.detachAllChildren();}
+    
     //TODO: finish this function
     public void LoadLevel(String fileName){
     

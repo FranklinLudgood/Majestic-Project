@@ -51,7 +51,7 @@ public class InGameAppState extends AbstractAppState{
        super.update(tpf);
        m_MessageCenter.update(tpf);
        double elapsedTime = (double) tpf;
-       LevelManager.GetInstance().getWorld().update(elapsedTime);
+       m_LevelManager.getWorld().update(elapsedTime);
        Vector3f position = m_Control.getSpatial().getLocalTranslation();
        m_playerCamera.lookAt(position, Vector3f.UNIT_Y);
     }
@@ -60,7 +60,16 @@ public class InGameAppState extends AbstractAppState{
     @Override
    public void cleanup() {
      super.cleanup();
-     LevelManager.GetInstance().getWorld().removeAllBodiesAndJoints();
+     m_LevelManager.ClearInGameObjects();
+     m_LevelManager.ClearGameObjects();
+     m_LevelManager.ClearSpatials();
+     m_LevelManager.ClearPaths();
+     m_LevelManager.ClearEvents();
+     m_LevelManager.ClearPhysics();
+     m_LevelManager.ClearScene();
+             
+     m_MessageCenter.ClearAll();
+     
      m_MessageCenter = null;
      m_LevelManager = null;
    }
@@ -88,7 +97,6 @@ public class InGameAppState extends AbstractAppState{
       m_LevelManager.getWorld().setSettings(worldSettings);
       m_LevelManager.getWorld().addListener(listner);
       
-      setColor();
       setCamera();
       setGameBoundries();
       setPath();
@@ -106,20 +114,6 @@ public class InGameAppState extends AbstractAppState{
     
     }
     
-    private void setColor(){
-    
-        Block.borderMaterial = new Material(m_LevelManager.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        Block.borderMaterial.setColor("Color", ColorRGBA.Gray);
-        
-        Block.blueMaterial = new Material(m_LevelManager.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        Block.blueMaterial.setColor("Color", ColorRGBA.Blue);
-        
-        Block.yellowMaterial = new Material(m_LevelManager.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        Block.yellowMaterial.setColor("Color", ColorRGBA.Yellow);
-        
-        Block.gravityMaterial = new Material(m_LevelManager.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        Block.gravityMaterial.setColor("Color", ColorRGBA.Pink);
-    }
     
     private void setGameBoundries(){
         

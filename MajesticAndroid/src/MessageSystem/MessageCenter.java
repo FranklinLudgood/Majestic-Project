@@ -48,6 +48,18 @@ public class MessageCenter {
     }
     
     
+    public void ClearAll(){
+        
+        m_TimeObjects.clear();
+        m_AreaObjects.clear();
+        m_EventResponders.clear();
+        m_BroadCastResponders.clear();
+        m_MessageResponders.clear();
+        m_TriggeredObjects.clear();
+        m_bufferObjects.ClearQueue();
+    }
+    
+    
     
     public void update(float tpf){
     

@@ -43,5 +43,7 @@ public class RingBuffer<Type> {
     
     }
     
+    public void ClearQueue(){m_head = m_tail = 0;} 
+    
     
 }
