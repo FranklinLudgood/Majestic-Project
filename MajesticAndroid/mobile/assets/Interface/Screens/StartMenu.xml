@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nifty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+    <useControls filename="nifty-default-controls.xml"/>
+    <useStyles filename="nifty-default-styles.xml"/>
+    <screen id="start" controller="InterfaceController.StartScreenController">
+        <layer id="layer0" childLayout="center">
+            <panel id="startPanel" height="100%" backgroundColor="#333f" width="45%" align="right" childLayout="vertical" valign="center">
+                <control name="button" id="play" height="20%" width="75%" align="center" label="Play" childLayout="center" valign="center"/>
+                <control name="button" id="settings" height="20%" width="75%" align="center" label="Settings and Profile" childLayout="center" valign="center"/>
+                <control name="button" id="exit" height="20%" width="75%" align="center" label="Exit" childLayout="center" valign="center"/>
+            </panel>
+        </layer>
+    </screen>
+</nifty>

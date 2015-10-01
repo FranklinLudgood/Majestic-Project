@@ -6,7 +6,7 @@
 package AppStates;
 
 import GameObjects.LevelManager;
-import GameObjects.PlayerControl;
+//import GameObjects.PlayerControl;
 import MessageSystem.GameContactListner;
 import MessageSystem.MessageCenter;
 import com.jme3.app.Application;
@@ -18,6 +18,8 @@ import org.dyn4j.dynamics.Settings;
 import org.dyn4j.geometry.Vector2;
 import com.jme3.scene.shape.Box;
 import com.jme3.math.Vector3f;
+import de.lessvoid.nifty.Nifty;
+import com.jme3.niftygui.NiftyJmeDisplay;
 
 
 public class OutOfGameState extends AbstractAppState {
@@ -25,7 +27,7 @@ public class OutOfGameState extends AbstractAppState {
     private MessageCenter m_MessageCenter;
     private LevelManager m_LevelManager;
     //private Camera m_playerCamera;
-    private PlayerControl m_Control;
+    //private PlayerControl m_Control;
      
     
     @Override
@@ -59,7 +61,7 @@ public class OutOfGameState extends AbstractAppState {
    public void initialize(AppStateManager stateManager, Application app) {
        super.initialize(stateManager, app);
        
-       m_MessageCenter = MessageCenter.GetInstance();
+      m_MessageCenter = MessageCenter.GetInstance();
       m_LevelManager = LevelManager.GetInstance();
        
       Settings worldSettings = new Settings();
@@ -76,6 +78,9 @@ public class OutOfGameState extends AbstractAppState {
       m_LevelManager.getWorld().setGravity(new Vector2(0.0, -10.0));
       m_LevelManager.getWorld().setSettings(worldSettings);
       m_LevelManager.getWorld().addListener(listner);
+      
+      Nifty nifty = m_LevelManager.getNiftyJmeDisplay().getNifty();
+      nifty.fromXml("Interface/Screens/StartMenu.xml", "start");
       
       setCamera();
       setGameBoundries();

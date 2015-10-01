@@ -50,6 +50,8 @@ public class Main extends SimpleApplication {
         LevelManager.GetInstance().setRenderManager(renderManager);
         LevelManager.GetInstance().setSceneNode(rootNode);
         LevelManager.GetInstance().setAssetManger(assetManager);
+        LevelManager.GetInstance().setGuiViewPort(guiViewPort);
+        LevelManager.GetInstance().setNiftyJmeDisplay(niftyDisplay);
         setColor();
         
         
