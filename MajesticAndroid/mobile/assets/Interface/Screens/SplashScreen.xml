@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nifty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+    <screen id="SplashScreen" controller="InterfaceController.SplashScreenController">
+        <layer id="layer0" childLayout="center">
+            <panel id="SplashPanel" height="100%" backgroundColor="#d269" width="100%" align="center" childLayout="center" valign="center">
+               <image id="SplashImage" height="50.0%" width="100.0%" filename="Textures/JME3_Splash_Screen.png"/>
+                 <effect>          
+                    <onStartSceeen name="fade" start="#0000" end="#ffff" length="15000"/>        
+                 </effect> 
+                 <effect>          
+                    <onEndScreen name="fade" start="#ffff" end="#0000" length="15000"/>        
+                 </effect>
+            </panel>
+        </layer>
+    </screen>
+</nifty>

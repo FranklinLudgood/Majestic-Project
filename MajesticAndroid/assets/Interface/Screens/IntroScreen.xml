@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nifty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+    <screen id="IntroScreen" controller="InterfaceController.IntroGameController">
+        <layer id="GLayer0" childLayout="center">
+            <image id="IntroImage" height="100.0%" width="100.0%" filename="Textures/retro_submarine.jpg">
+                 <effect>          
+                    <onStartSceeen name="fade" start="#0000" end="#ffff" length="8000"/>        
+                 </effect> 
+                 <effect>          
+                    <onEndScreen name="fade" start="#ffff" end="#0000" length="8000"/>        
+                 </effect>
+            </image>
+        </layer>
+    </screen>
+</nifty>

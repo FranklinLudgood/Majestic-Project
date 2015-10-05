@@ -80,7 +80,10 @@ public class OutOfGameState extends AbstractAppState {
       m_LevelManager.getWorld().addListener(listner);
       
       Nifty nifty = m_LevelManager.getNiftyJmeDisplay().getNifty();
-      nifty.fromXml("Interface/Screens/StartMenu.xml", "start");
+      nifty.fromXml("Interface/Screens/IntroScreen.xml", "IntroScreen");
+      nifty.fromXml("Interface/Screens/IntroScreen.xml", "IntroScreen");
+      nifty.addXml("Interface/Screens/SplashScreen.xml");
+      nifty.addXml("Interface/Screens/StartMenu.xml");
       
       setCamera();
       setGameBoundries();

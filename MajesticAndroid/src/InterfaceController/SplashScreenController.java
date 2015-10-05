@@ -1,23 +1,27 @@
 /*******************************************************
- * File Name: InGameAppState.java
+ * File Name: SplashScreenController.java
  * Author: Franklin Ludgood
- * Date Created: 09-30-2015
+ * Date Created: 10-03-2015
  ********************************************************/
 package InterfaceController;
 
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
-import GameObjects.LevelManager;
+import MessageSystem.MessageCenter;
+import MessageSystem.TimedTriggered;
+import MessageSystem.TimeTrigger;
 
-public class StartScreenController implements ScreenController {
+
+public class SplashScreenController implements ScreenController, TimedTriggered {
     
     private Nifty m_nifty;
-    
 
     public void bind(Nifty nifty, Screen screen) {
-        m_nifty = nifty;
+         m_nifty = nifty;
+         MessageCenter center = MessageCenter.GetInstance();
+         TimeTrigger timer = new TimeTrigger(10.0f, this, true);
+         center.CreateTimeDelay(timer);
     }
 
     public void onStartScreen() {
@@ -27,22 +31,9 @@ public class StartScreenController implements ScreenController {
     public void onEndScreen() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    public void exitButton(){
-  
-       Element popUp = m_nifty.createPopup("exitPopup");
-       m_nifty.showPopup(m_nifty.getCurrentScreen(), popUp.getId(), null);
 
+    public void onTriggered() {
+         m_nifty.gotoScreen("start");
     }
-    
-    public void yesButton(){
-        LevelManager.GetInstance().getApplication().stop();  
-    }
-    
-    public void noButton(){
-            m_nifty.createPopup("exitPopup");
-    }
-    
-    
     
 }

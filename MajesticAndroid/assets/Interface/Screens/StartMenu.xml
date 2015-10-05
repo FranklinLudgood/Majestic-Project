@@ -4,13 +4,22 @@
     <useStyles filename="nifty-default-styles.xml"/>
     <screen id="start" controller="InterfaceController.StartScreenController">
         <layer id="layer0" childLayout="center">
-            <panel id="startPanel" height="100%" backgroundColor="#333f" width="45%" align="right" childLayout="vertical" valign="center">
-                <control name="button" id="play" height="20%" width="75%" align="center" label="Play" childLayout="center" valign="center"/>
-                <control name="button" id="settings" height="20%" width="75%" align="center" label="Settings and Profile" childLayout="center" valign="center"/>
-                <control name="button" id="exit" height="20%" width="75%" align="center" label="Exit" childLayout="center" valign="center">
-                   
+            <panel id="startPanel" height="100%" backgroundColor="#d269" width="45%" align="right" childLayout="absolute" valign="center">
+                <control name="button" id="start" height="10.0%" width="100.0%" label="Start" childLayout="center" y="25%" x="0%"/>
+                <control name="button" id="profile" height="10.0%" width="100.0%" label="Profile and Settings" childLayout="center" y="50.0%" x="0%"/>
+                <control name="button" id="exit" height="10.0%" width="100.0%" label="Exit" childLayout="center" y="75.0%" x="0%">
+                    <interact onClick="exitButton()"/>
                 </control>
             </panel>
         </layer>
+        <popup id="exitPopup" backgroundColor="#000a" width="45%" height="45%" align="center" valign="center" childLayout="absolute">
+            <control name="label" id="ExitLabel" text="Are you sure you want to quit?" height="10.0%" width="100.0%" backgroundColor="#0000"  font="aurulent-sans-20.fnt" y="0%" x="0%"/>
+            <control name="button" id="yesButton" height="10.0%" width="20.0%" label="Yes!" childLayout="center" font="aurulent-sans-20.fnt" backgroundColor="#d3d3d3" y="75.0%" x="5.0%">
+                <interact onClick="yesButton()"/>
+            </control>
+            <control name="button" id="noButton" height="10.0%" width="20.0%" label="No!!!" childLayout="center" font="aurulent-sans-20.fnt" backgroundColor="#d3d3d3" y="75.0%" x="75.0%">
+                <interact onClick="noButton()"/>
+            </control>
+        </popup>
     </screen>
 </nifty>
