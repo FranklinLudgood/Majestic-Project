@@ -20,6 +20,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.math.Vector3f;
 import de.lessvoid.nifty.Nifty;
 import com.jme3.niftygui.NiftyJmeDisplay;
+import de.lessvoid.nifty.elements.Element;
 
 
 public class OutOfGameState extends AbstractAppState {
@@ -81,9 +82,10 @@ public class OutOfGameState extends AbstractAppState {
       
       Nifty nifty = m_LevelManager.getNiftyJmeDisplay().getNifty();
       nifty.fromXml("Interface/Screens/IntroScreen.xml", "IntroScreen");
-      nifty.fromXml("Interface/Screens/IntroScreen.xml", "IntroScreen");
       nifty.addXml("Interface/Screens/SplashScreen.xml");
       nifty.addXml("Interface/Screens/StartMenu.xml");
+      
+      
       
       setCamera();
       setGameBoundries();

@@ -29,8 +29,7 @@ public class StartScreenController implements ScreenController {
     }
     
     public void exitButton(){
-  
-       Element popUp = m_nifty.createPopup("exitPopup");
+       Element popUp = m_nifty.createPopup("confirmPopup");
        m_nifty.showPopup(m_nifty.getCurrentScreen(), popUp.getId(), null);
 
     }
@@ -40,7 +39,7 @@ public class StartScreenController implements ScreenController {
     }
     
     public void noButton(){
-            m_nifty.createPopup("exitPopup");
+            m_nifty.closePopup("confirmPopup");
     }
     
     

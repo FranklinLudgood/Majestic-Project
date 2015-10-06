@@ -12,14 +12,14 @@
                 </control>
             </panel>
         </layer>
-        <popup id="exitPopup" backgroundColor="#000a" width="45%" height="45%" align="center" valign="center" childLayout="absolute">
-            <control name="label" id="ExitLabel" text="Are you sure you want to quit?" height="10.0%" width="100.0%" backgroundColor="#0000"  font="aurulent-sans-20.fnt" y="0%" x="0%"/>
-            <control name="button" id="yesButton" height="10.0%" width="20.0%" label="Yes!" childLayout="center" font="aurulent-sans-20.fnt" backgroundColor="#d3d3d3" y="75.0%" x="5.0%">
-                <interact onClick="yesButton()"/>
+    </screen>
+    <popup id="confirmPopup"  controller="InterfaceController.StartScreenController"  backgroundColor="#000a" width="45px" height="45px" align="center" valign="center" font="Interface/Fonts/Default.fnt" childLayout="absolute">
+         <control name="label" id="ExitLabel" text="Are you sure you want to quit?" height="10.0%" width="100.0%" backgroundColor="#0000" y="0%" x="0%"/>
+         <control name="button" id="yesButton" height="10.0%" width="20.0%" label="Yes!" childLayout="center" backgroundColor="#d3d3d3" y="75.0%" x="5.0%">
+               <interact onClick="yesButton()"/>
             </control>
-            <control name="button" id="noButton" height="10.0%" width="20.0%" label="No!!!" childLayout="center" font="aurulent-sans-20.fnt" backgroundColor="#d3d3d3" y="75.0%" x="75.0%">
-                <interact onClick="noButton()"/>
+            <control name="button" id="noButton" height="10.0%" width="20.0%" label="No!!!" childLayout="center" backgroundColor="#d3d3d3" y="75.0%" x="75.0%">
+               <interact onClick="noButton()"/>
             </control>
         </popup>
-    </screen>
 </nifty>
