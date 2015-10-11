@@ -5,21 +5,14 @@
     <screen id="start" controller="InterfaceController.StartScreenController">
         <layer id="layer0" childLayout="center">
             <panel id="startPanel" height="100%" backgroundColor="#d269" width="45%" align="right" childLayout="absolute" valign="center">
-                <control name="button" id="start" height="10.0%" width="100.0%" label="Start" childLayout="center" y="25%" x="0%"/>
-                <control name="button" id="profile" height="10.0%" width="100.0%" label="Profile and Settings" childLayout="center" y="50.0%" x="0%"/>
-                <control name="button" id="exit" height="10.0%" width="100.0%" label="Exit" childLayout="center" y="75.0%" x="0%">
-                    <interact onClick="exitButton()"/>
+                
+                <control name="button" id="start" height="15.0%" width="90.0%" label="Begin" childLayout="center" y="30%" x="5.0%">
+                    
+                </control>
+                <control name="button" id="profile" height="15.0%" width="90.0%" label="Credits" childLayout="center" y="65.0%" x="5.0%">
+                   
                 </control>
             </panel>
         </layer>
     </screen>
-    <popup id="confirmPopup"  controller="InterfaceController.StartScreenController"  backgroundColor="#000a" width="45px" height="45px" align="center" valign="center" font="Interface/Fonts/Default.fnt" childLayout="absolute">
-         <control name="label" id="ExitLabel" text="Are you sure you want to quit?" height="10.0%" width="100.0%" backgroundColor="#0000" y="0%" x="0%"/>
-         <control name="button" id="yesButton" height="10.0%" width="20.0%" label="Yes!" childLayout="center" backgroundColor="#d3d3d3" y="75.0%" x="5.0%">
-               <interact onClick="yesButton()"/>
-            </control>
-            <control name="button" id="noButton" height="10.0%" width="20.0%" label="No!!!" childLayout="center" backgroundColor="#d3d3d3" y="75.0%" x="75.0%">
-               <interact onClick="noButton()"/>
-            </control>
-        </popup>
 </nifty>

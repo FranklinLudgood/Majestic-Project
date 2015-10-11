@@ -4,10 +4,10 @@
         <layer id="GLayer0" childLayout="center">
             <image id="IntroImage" height="100.0%" width="100.0%" filename="Textures/retro_submarine.jpg">
                  <effect>          
-                    <onStartSceeen name="fade" start="#0000" end="#ffff" length="8000"/>        
+                    <onStartSceeen name="fade" start="#0" end="#f" length="5000"/>        
                  </effect> 
                  <effect>          
-                    <onEndScreen name="fade" start="#ffff" end="#0000" length="8000"/>        
+                    <onEndScreen name="fade" start="#f" end="#0" length="5000"/>        
                  </effect>
             </image>
         </layer>

@@ -86,7 +86,6 @@ public class OutOfGameState extends AbstractAppState {
       nifty.addXml("Interface/Screens/StartMenu.xml");
       
       
-      
       setCamera();
       setGameBoundries();
       setBricks();

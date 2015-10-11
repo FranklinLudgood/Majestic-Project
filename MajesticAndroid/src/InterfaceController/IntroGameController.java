@@ -19,7 +19,7 @@ public class IntroGameController implements ScreenController, TimedTriggered {
     public void bind(Nifty nifty, Screen screen) {
         m_nifty = nifty;
         MessageCenter messageCenter = MessageCenter.GetInstance();
-        TimeTrigger trigger = new TimeTrigger(25.0f, this, true);
+        TimeTrigger trigger = new TimeTrigger(10.0f, this, true);
         messageCenter.CreateTimeDelay(trigger);
     }
 

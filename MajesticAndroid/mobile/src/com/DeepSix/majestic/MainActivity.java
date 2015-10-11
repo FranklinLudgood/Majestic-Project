@@ -7,16 +7,22 @@ import com.jme3.app.AndroidHarness;
 import com.jme3.system.android.AndroidConfigChooser.ConfigType;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
-//import com.jme3.input.controls.TouchListener;
-//import com.jme3.input.InputManager;
 import android.hardware.SensorEventListener;
-//import com.jme3.input.event.TouchEvent;
 import GameInput.GameInputManager;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.widget.Toast;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.ConnectionResult;
 
  
-public class MainActivity extends AndroidHarness implements SensorEventListener {
+public class MainActivity extends AndroidHarness implements SensorEventListener, OnCancelListener{
+    
+    private static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
  
     /*
      * Note that you can ignore the errors displayed in this file,
@@ -65,9 +71,22 @@ public class MainActivity extends AndroidHarness implements SensorEventListener 
     protected void onResume()
     {
         super.onResume();
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if(resultCode != ConnectionResult.SUCCESS){
+            if(GooglePlayServicesUtil.isUserRecoverableError(resultCode) == true){
+               
+                Dialog errorDialog =  GooglePlayServicesUtil.getErrorDialog(resultCode, this, 
+                    REQUEST_CODE_RECOVER_PLAY_SERVICES, (OnCancelListener) this);
+                errorDialog.show();
+            } else {
+                Toast.makeText(this, "This device is not Supported.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }
         RegisterSensors();
     }
      
+   
      @Override
     protected void onPause()
     {
@@ -110,9 +129,7 @@ public class MainActivity extends AndroidHarness implements SensorEventListener 
                                            orientationValues[1], orientationValues[2]);
         }
                 
-                
-        
-        
+                    
     }
     
      @Override
@@ -134,6 +151,25 @@ public class MainActivity extends AndroidHarness implements SensorEventListener 
          }
         else
             rotationMatrixGenerated = false;
+    }
+
+    public void onCancel(DialogInterface dialog) { 
+         Toast.makeText(this, "Google Play Services must be installed to Play Majestic.", Toast.LENGTH_LONG).show();
+         finish();
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+          case REQUEST_CODE_RECOVER_PLAY_SERVICES:
+            if (resultCode == RESULT_CANCELED) {
+              Toast.makeText(this, "Google Play Services must be installed to Play Majestic.",
+                  Toast.LENGTH_SHORT).show();
+              finish();
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
      
 }

@@ -20,7 +20,7 @@ public class SplashScreenController implements ScreenController, TimedTriggered 
     public void bind(Nifty nifty, Screen screen) {
          m_nifty = nifty;
          MessageCenter center = MessageCenter.GetInstance();
-         TimeTrigger timer = new TimeTrigger(10.0f, this, true);
+         TimeTrigger timer = new TimeTrigger(5.0f, this, true);
          center.CreateTimeDelay(timer);
     }
 

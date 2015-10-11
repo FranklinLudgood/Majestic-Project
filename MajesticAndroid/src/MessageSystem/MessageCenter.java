@@ -63,8 +63,12 @@ public class MessageCenter {
     
     public void update(float tpf){
     
-            for(int i = 0; i < m_TimeObjects.size(); ++i)
+            for(int i = 0; i < m_TimeObjects.size(); ++i){
                 m_TimeObjects.get(i).update(tpf);
+                
+                if(m_TimeObjects.get(i).isTriggered() == true)
+                    m_TimeObjects.remove(i);
+            }
             
           
             
