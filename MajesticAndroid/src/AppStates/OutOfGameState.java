@@ -84,6 +84,7 @@ public class OutOfGameState extends AbstractAppState {
       nifty.fromXml("Interface/Screens/IntroScreen.xml", "IntroScreen");
       nifty.addXml("Interface/Screens/SplashScreen.xml");
       nifty.addXml("Interface/Screens/StartMenu.xml");
+      nifty.addXml("Interface/Screens/OutOfGameScreens.xml");
       
       
       setCamera();

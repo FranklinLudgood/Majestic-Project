@@ -21,16 +21,19 @@ public class StartScreenController implements ScreenController {
     }
 
     public void onStartScreen() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         
     }
 
     public void onEndScreen() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         
+    }
+    
+    public void startButton(){
+        m_nifty.gotoScreen("OutOfGameScreen");
     }
     
     public void exitButton(){
-       Element popUp = m_nifty.createPopup("confirmPopup");
-       m_nifty.showPopup(m_nifty.getCurrentScreen(), popUp.getId(), null);
+       
 
     }
     
@@ -39,7 +42,7 @@ public class StartScreenController implements ScreenController {
     }
     
     public void noButton(){
-            m_nifty.closePopup("confirmPopup");
+            //m_nifty.closePopup("confirmPopup");
     }
     
     

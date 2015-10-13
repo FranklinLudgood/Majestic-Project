@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nifty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+    <useControls filename="nifty-default-controls.xml"/>
+    <useStyles filename="nifty-default-styles.xml"/>
+    
+    <screen id="OutOfGameScreen" controller="InterfaceController.OutOfGameScreensController">
+        <layer id="GLayer0" childLayout="absolute">
+            <panel id="OutOfGamePanel"  backgroundColor="#00008b" width="45%" height="100%" childLayout="absolute" x="55%" y="0%">
+               <effect>          
+                    <onStartSceeen name="fade" length="10000"/>        
+                 </effect> 
+                 <effect>          
+                    <onEndScreen name="fade" length="10000"/>        
+                 </effect> 
+            </panel>
+        </layer>
+    </screen>
+</nifty>

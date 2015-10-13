@@ -18,11 +18,34 @@ import android.os.Bundle;
 import android.widget.Toast;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.AccountPicker;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.accounts.AccountManager;
+import android.os.AsyncTask;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import java.io.IOException;
+import android.util.Log;
+
 
  
 public class MainActivity extends AndroidHarness implements SensorEventListener, OnCancelListener{
     
+    public static final String TAG = "Majestic";
+    private static final String PREFS_IS_AUTHORIZED = "isAuthorized";
+    private static final String PREFS_SELECTED_ACCOUNT = "selectedAccount";
+    private static final String AUTHORIZED_SCOPE =  "oauth2:https://www.googleapis.com/auth/drive.appdata " +
+                                                    "https://www.googleapis.com/auth/userinfo.profile " +
+                                                    "https://www.googleapis.com/auth/plus.me";
+    
+     private static final String PREFS_AUTH_TOKEN = "authToken";
+    
+    
     private static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
+    private static final int REQUEST_GOOGLE_PLAY_ACCOUNT = 999;
+    private static final int REQUEST_TOKEN = 2002;
  
     /*
      * Note that you can ignore the errors displayed in this file,
@@ -36,6 +59,8 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
     private float[] magneticValues;
     private float[] orientationValues;
     private boolean rotationMatrixGenerated;
+    private SharedPreferences prefrences;
+    private String accountName;
     
  
     public MainActivity(){
@@ -65,6 +90,8 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
         rotationMatrix = new float[16];
         orientationValues = new float[3];
         rotationMatrixGenerated = false;
+        
+        prefrences = PreferenceManager.getDefaultSharedPreferences(this);
     }
     
      @Override
@@ -82,6 +109,8 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
                 Toast.makeText(this, "This device is not Supported.", Toast.LENGTH_LONG).show();
                 finish();
             }
+        } else if(resultCode == ConnectionResult.SUCCESS){
+            ConnectToGooglePlay();
         }
         RegisterSensors();
     }
@@ -167,9 +196,67 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
                   Toast.LENGTH_SHORT).show();
               finish();
             }
-            return;
+            break;
+            //return;
+              
+          case REQUEST_GOOGLE_PLAY_ACCOUNT:
+              if(resultCode == RESULT_OK){
+                  accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                  prefrences.edit().putBoolean(PREFS_IS_AUTHORIZED, true).putString(PREFS_SELECTED_ACCOUNT, accountName)
+                          .apply();
+                  invalidateOptionsMenu();
+                  new AuthorizationTask().execute(accountName);
+                  //new MyAuthTokenTask().execute(accountName);
+              } else if(resultCode == RESULT_CANCELED){
+                  Toast.makeText(this, "You must log onto Google Play to play Majestic", Toast.LENGTH_SHORT).show();
+                  finish();
+              }
+              break;
+              
+          case REQUEST_TOKEN:
+              if(resultCode == RESULT_OK){
+                  //try again
+                  new AuthorizationTask().execute(accountName);
+              }
+              break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    
+    private void ConnectToGooglePlay(){
+    
+        Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, false, 
+                                                               "Pick a Google Account to connect to.", null, null, null);
+        startActivityForResult(intent, REQUEST_GOOGLE_PLAY_ACCOUNT); 
+    }
+    
+    
+    class AuthorizationTask extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... accountName) {
+             String authToken = null;
+            try {
+                authToken = GoogleAuthUtil.getToken(MainActivity.this,
+                        accountName[0], AUTHORIZED_SCOPE);
+            } catch (IOException e) {
+                Log.e(TAG, "Error getting auth token.", e);
+            } catch (UserRecoverableAuthException e) {
+                Log.d(TAG, "User recoverable error.");
+                cancel(true);
+                startActivityForResult(e.getIntent(), REQUEST_TOKEN);
+            } catch (GoogleAuthException e) {
+                Log.e(TAG, "Error getting auth token.", e);
+            }
+            return authToken;
+        }
+        
+        @Override
+        protected void onPostExecute(String result){
+             if (result != null) {
+                prefrences.edit().putString(PREFS_AUTH_TOKEN, result).apply();
+            }
+        }
     }
      
 }

@@ -4,14 +4,19 @@
     <useStyles filename="nifty-default-styles.xml"/>
     <screen id="start" controller="InterfaceController.StartScreenController">
         <layer id="layer0" childLayout="center">
-            <panel id="startPanel" height="100%" backgroundColor="#d269" width="45%" align="right" childLayout="absolute" valign="center">
-                
+            <panel id="startPanel" height="100%" backgroundColor="#d269" width="45%" align="right" childLayout="absolute" valign="center">  
                 <control name="button" id="start" height="15.0%" width="90.0%" label="Begin" childLayout="center" y="30%" x="5.0%">
-                    
+                    <interact onClick="startButton()" />
                 </control>
-                <control name="button" id="profile" height="15.0%" width="90.0%" label="Credits" childLayout="center" y="65.0%" x="5.0%">
+                <control name="button" id="credits" height="15.0%" width="90.0%" label="Credits" childLayout="center" y="65.0%" x="5.0%">
                    
                 </control>
+                 <effect>          
+                    <onStartSceeen name="fade" length="10000"/>        
+                 </effect> 
+                 <effect>          
+                    <onEndScreen name="fade" length="10000"/>        
+                 </effect> 
             </panel>
         </layer>
     </screen>

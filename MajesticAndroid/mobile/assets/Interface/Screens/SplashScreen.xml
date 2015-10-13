@@ -5,10 +5,10 @@
             <panel id="SplashPanel" height="100%" backgroundColor="#d269" width="100%" align="center" childLayout="center" valign="center">
                <image id="SplashImage" height="50.0%" width="100.0%" filename="Textures/JME3_Splash_Screen.png"/>
                  <effect>          
-                    <onStartSceeen name="fade" start="#0000" end="#ffff" length="15000"/>        
+                    <onStartSceeen name="fade" length="5000"/>        
                  </effect> 
                  <effect>          
-                    <onEndScreen name="fade" start="#ffff" end="#0000" length="15000"/>        
+                    <onEndScreen name="fade" start="#f" end="#0" length="5000"/>        
                  </effect>
             </panel>
         </layer>
