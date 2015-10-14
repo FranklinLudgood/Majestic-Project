@@ -60,7 +60,7 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
     private float[] orientationValues;
     private boolean rotationMatrixGenerated;
     private SharedPreferences prefrences;
-    private String accountName;
+   
     
  
     public MainActivity(){
@@ -92,6 +92,7 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
         rotationMatrixGenerated = false;
         
         prefrences = PreferenceManager.getDefaultSharedPreferences(this);
+        
     }
     
      @Override
@@ -101,17 +102,17 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if(resultCode != ConnectionResult.SUCCESS){
             if(GooglePlayServicesUtil.isUserRecoverableError(resultCode) == true){
-               
                 Dialog errorDialog =  GooglePlayServicesUtil.getErrorDialog(resultCode, this, 
                     REQUEST_CODE_RECOVER_PLAY_SERVICES, (OnCancelListener) this);
                 errorDialog.show();
+            }
             } else {
                 Toast.makeText(this, "This device is not Supported.", Toast.LENGTH_LONG).show();
                 finish();
             }
-        } else if(resultCode == ConnectionResult.SUCCESS){
-            ConnectToGooglePlay();
-        }
+        //} else if(resultCode == ConnectionResult.SUCCESS && accountName != null){
+        //    ConnectToGooglePlay();
+        //}
         RegisterSensors();
     }
      
@@ -197,16 +198,14 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
               finish();
             }
             break;
-            //return;
               
           case REQUEST_GOOGLE_PLAY_ACCOUNT:
               if(resultCode == RESULT_OK){
-                  accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                String  accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                   prefrences.edit().putBoolean(PREFS_IS_AUTHORIZED, true).putString(PREFS_SELECTED_ACCOUNT, accountName)
                           .apply();
                   invalidateOptionsMenu();
-                  new AuthorizationTask().execute(accountName);
-                  //new MyAuthTokenTask().execute(accountName);
+                 new AuthorizationTask().execute(accountName);
               } else if(resultCode == RESULT_CANCELED){
                   Toast.makeText(this, "You must log onto Google Play to play Majestic", Toast.LENGTH_SHORT).show();
                   finish();
@@ -215,8 +214,7 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
               
           case REQUEST_TOKEN:
               if(resultCode == RESULT_OK){
-                  //try again
-                  new AuthorizationTask().execute(accountName);
+                  new AuthorizationTask().execute(prefrences.getString(PREFS_SELECTED_ACCOUNT, null));
               }
               break;
         }
