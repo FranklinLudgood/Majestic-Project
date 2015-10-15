@@ -11,12 +11,11 @@ import java.util.EnumMap;
 
 
 
-//TODO: Test this class.
-
 public class MessageCenter {
     
     
     private static MessageCenter m_message;
+    private GooglePlayInterface googleInterface;
     
     public static MessageCenter GetInstance(){
         
@@ -242,6 +241,11 @@ public class MessageCenter {
         }
      
     }
+    
+    public void setGooglePlayInterface(GooglePlayInterface googlePlay){googleInterface = googlePlay;}
+    
+    
+    public GooglePlayInterface getGooglePlayInterface(){return googleInterface;}
     
    
 }

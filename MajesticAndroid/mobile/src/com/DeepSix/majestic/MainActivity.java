@@ -9,6 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import android.hardware.SensorEventListener;
 import GameInput.GameInputManager;
+import MessageSystem.MessageCenter;
+import MessageSystem.GooglePlayInterface;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -28,10 +30,10 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import java.io.IOException;
 import android.util.Log;
-
+import MessageSystem.GameBroadCast;
 
  
-public class MainActivity extends AndroidHarness implements SensorEventListener, OnCancelListener{
+public class MainActivity extends AndroidHarness implements SensorEventListener, OnCancelListener, GooglePlayInterface{
     
     public static final String TAG = "Majestic";
     private static final String PREFS_IS_AUTHORIZED = "isAuthorized";
@@ -92,6 +94,7 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
         rotationMatrixGenerated = false;
         
         prefrences = PreferenceManager.getDefaultSharedPreferences(this);
+        MessageCenter.GetInstance().setGooglePlayInterface((GooglePlayInterface) this);
         
     }
     
@@ -106,13 +109,8 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
                     REQUEST_CODE_RECOVER_PLAY_SERVICES, (OnCancelListener) this);
                 errorDialog.show();
             }
-            } else {
-                Toast.makeText(this, "This device is not Supported.", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        //} else if(resultCode == ConnectionResult.SUCCESS && accountName != null){
-        //    ConnectToGooglePlay();
-        //}
+        }
+        
         RegisterSensors();
     }
      
@@ -208,7 +206,8 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
                  new AuthorizationTask().execute(accountName);
               } else if(resultCode == RESULT_CANCELED){
                   Toast.makeText(this, "You must log onto Google Play to play Majestic", Toast.LENGTH_SHORT).show();
-                  finish();
+                   GameBroadCast cast = new GameBroadCast(null, null, GameBroadCast.BroadCastType.GOOGLE_PLAY_FAILURE);
+                MessageCenter.GetInstance().SendBroadCast(cast);
               }
               break;
               
@@ -221,11 +220,16 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
         super.onActivityResult(requestCode, resultCode, data);
     }
     
-    private void ConnectToGooglePlay(){
+    public void RequestGooglePlayAccount(){
     
         Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, false, 
                                                                "Pick a Google Account to connect to.", null, null, null);
         startActivityForResult(intent, REQUEST_GOOGLE_PLAY_ACCOUNT); 
+    }
+    
+    public String getAccountString(){
+        String authName = prefrences.getString(PREFS_SELECTED_ACCOUNT, null);
+        return authName;
     }
     
     
@@ -253,6 +257,8 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
         protected void onPostExecute(String result){
              if (result != null) {
                 prefrences.edit().putString(PREFS_AUTH_TOKEN, result).apply();
+                GameBroadCast cast = new GameBroadCast(null, null, GameBroadCast.BroadCastType.GOOGLE_PLAY_SUCESS);
+                MessageCenter.GetInstance().SendBroadCast(cast);
             }
         }
     }

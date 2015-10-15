@@ -8,7 +8,7 @@ package MessageSystem;
 
 public class GameBroadCast {
     
-    public static enum BroadCastType{GAME_WON, GAME_LOST, UPDATE_SCORE, UPDATE_HEALTH, UPDATE_MULTIPLER, UPDATE_GAME,}
+    public static enum BroadCastType{GAME_WON, GAME_LOST, UPDATE_SCORE, UPDATE_HEALTH, UPDATE_MULTIPLER, UPDATE_GAME, GOOGLE_PLAY_SUCESS, GOOGLE_PLAY_FAILURE}
     
     private String m_message;
     private Object m_package;

@@ -36,7 +36,6 @@ public class Main extends SimpleApplication {
        
         //setting fly camera
         flyCam.setEnabled(false);
-        //flyCam.setMoveSpeed(5.0f);
         
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager,
                                                           inputManager,
@@ -54,15 +53,8 @@ public class Main extends SimpleApplication {
         LevelManager.GetInstance().setNiftyJmeDisplay(niftyDisplay);
         setColor();
         
-        
-        //Create and intialize InGameAppState
-        //InGameAppState state = new InGameAppState();
-        //stateManager.attach(state);
-        
         OutOfGameState state = new OutOfGameState();
-        stateManager.attach(state);
-        
-        
+        stateManager.attach(state);        
     }
 
     @Override
