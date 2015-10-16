@@ -119,8 +119,10 @@ public class MessageCenter {
         if(success == true){
            List<BroadCastResponse> list = m_BroadCastResponders.get(broadCast.GetType());
            if(list != null){
-                for(int i = 0; i < list.size(); ++i)
-                    list.get(i).Response(broadCast);
+                for(int i = 0; i < list.size(); ++i){
+                     list.get(i).Response(broadCast);
+                }
+                   
           }
         }
         return success;

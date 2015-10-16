@@ -5,8 +5,12 @@
  *******************************************************/
 package GameObjects;
 
+import MessageSystem.BroadCastResponse;
+import MessageSystem.GameBroadCast;
+import MessageSystem.MessageCenter;
 
-public class PlayerProfile {
+
+public class PlayerProfile implements BroadCastResponse {
     
     private static PlayerProfile m_profile;
     
@@ -51,7 +55,14 @@ public class PlayerProfile {
         stop_coefficient = 0.5f;
         isZero = 0.05f;
         max_health = 3;
+        
+        MessageCenter.GetInstance().addBroadCastResponse(this, GameBroadCast.BroadCastType.GOOGLE_PLAY_FAILURE);
+        MessageCenter.GetInstance().addBroadCastResponse(this, GameBroadCast.BroadCastType.GOOGLE_PLAY_SUCCESS);
     
+    }
+
+    public void Response(GameBroadCast broadCast) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

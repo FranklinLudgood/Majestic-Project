@@ -6,7 +6,6 @@
 package AppStates;
 
 import GameObjects.LevelManager;
-//import GameObjects.PlayerControl;
 import MessageSystem.GameContactListner;
 import MessageSystem.MessageCenter;
 import com.jme3.app.Application;
@@ -19,16 +18,18 @@ import org.dyn4j.geometry.Vector2;
 import com.jme3.scene.shape.Box;
 import com.jme3.math.Vector3f;
 import de.lessvoid.nifty.Nifty;
-import com.jme3.niftygui.NiftyJmeDisplay;
-import de.lessvoid.nifty.elements.Element;
+import MessageSystem.MessageCenter;
+
+//import MessageSystem.GameBroadCast;
+//import com.jme3.niftygui.NiftyJmeDisplay;
+//import de.lessvoid.nifty.elements.Element;
 
 
 public class OutOfGameState extends AbstractAppState {
     
     private MessageCenter m_MessageCenter;
     private LevelManager m_LevelManager;
-    //private Camera m_playerCamera;
-    //private PlayerControl m_Control;
+    
      
     
     @Override
@@ -91,6 +92,7 @@ public class OutOfGameState extends AbstractAppState {
       setGameBoundries();
       setBricks();
       setPlayer();
+      
    }
      
      
@@ -130,4 +132,5 @@ public class OutOfGameState extends AbstractAppState {
         CreateGameObjects.CreateBeninBlockStatic("Block4", "Benin", new Vector3f(13.0f, 10.0f, 0.0f), bigBox);
         
     }
+
 }

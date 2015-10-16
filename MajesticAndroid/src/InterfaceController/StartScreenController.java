@@ -9,12 +9,11 @@ import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import GameObjects.LevelManager;
-//import MessageSystem.GameMessage;
 import MessageSystem.MessageCenter;
 import MessageSystem.BroadCastResponse;
 import MessageSystem.GameBroadCast;
 
-public class StartScreenController implements ScreenController, BroadCastResponse {
+public class StartScreenController implements ScreenController {
     
     
     private Nifty m_nifty;
@@ -24,8 +23,6 @@ public class StartScreenController implements ScreenController, BroadCastRespons
         m_nifty = nifty;
         m_nifty.removeScreen("IntroScreen");
         m_nifty.removeScreen("SplashScreen");
-        MessageCenter.GetInstance().addBroadCastResponse(this, GameBroadCast.BroadCastType.GOOGLE_PLAY_SUCESS);
-        MessageCenter.GetInstance().addBroadCastResponse(this, GameBroadCast.BroadCastType.GOOGLE_PLAY_FAILURE);
     }
 
     public void onStartScreen() {
@@ -46,17 +43,18 @@ public class StartScreenController implements ScreenController, BroadCastRespons
     }
     
     public void yesButton(){
-        LevelManager.GetInstance().getApplication().stop();  
+         
     }
     
     public void noButton(){
-            //m_nifty.closePopup("confirmPopup");
+            
     }
 
+    /*
     public void Response(GameBroadCast broadCast) {
         if(broadCast.GetType() == GameBroadCast.BroadCastType.GOOGLE_PLAY_SUCESS)
             m_nifty.gotoScreen("OutOfGameScreen");
     }
- 
+ */
     
 }
