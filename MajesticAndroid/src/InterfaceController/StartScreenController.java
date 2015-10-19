@@ -8,10 +8,8 @@ package InterfaceController;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
-import GameObjects.LevelManager;
 import MessageSystem.MessageCenter;
-import MessageSystem.BroadCastResponse;
-import MessageSystem.GameBroadCast;
+
 
 public class StartScreenController implements ScreenController {
     
@@ -50,11 +48,6 @@ public class StartScreenController implements ScreenController {
             
     }
 
-    /*
-    public void Response(GameBroadCast broadCast) {
-        if(broadCast.GetType() == GameBroadCast.BroadCastType.GOOGLE_PLAY_SUCESS)
-            m_nifty.gotoScreen("OutOfGameScreen");
-    }
- */
+  
     
 }

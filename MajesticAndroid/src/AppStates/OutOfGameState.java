@@ -7,7 +7,6 @@ package AppStates;
 
 import GameObjects.LevelManager;
 import MessageSystem.GameContactListner;
-import MessageSystem.MessageCenter;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
@@ -20,9 +19,6 @@ import com.jme3.math.Vector3f;
 import de.lessvoid.nifty.Nifty;
 import MessageSystem.MessageCenter;
 
-//import MessageSystem.GameBroadCast;
-//import com.jme3.niftygui.NiftyJmeDisplay;
-//import de.lessvoid.nifty.elements.Element;
 
 
 public class OutOfGameState extends AbstractAppState {
@@ -86,6 +82,7 @@ public class OutOfGameState extends AbstractAppState {
       nifty.addXml("Interface/Screens/SplashScreen.xml");
       nifty.addXml("Interface/Screens/StartMenu.xml");
       nifty.addXml("Interface/Screens/OutOfGameScreens.xml");
+      nifty.addXml("Interface/Screens/SettingsScreen.xml");
       
       
       setCamera();

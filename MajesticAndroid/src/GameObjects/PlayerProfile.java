@@ -5,12 +5,9 @@
  *******************************************************/
 package GameObjects;
 
-import MessageSystem.BroadCastResponse;
-import MessageSystem.GameBroadCast;
-import MessageSystem.MessageCenter;
 
 
-public class PlayerProfile implements BroadCastResponse {
+public class PlayerProfile  {
     
     private static PlayerProfile m_profile;
     
@@ -35,7 +32,7 @@ public class PlayerProfile implements BroadCastResponse {
     public int total_amount_health_lost;
     public int total_amount_health_received;
     public float total_air_time; //time is in seconds.
-    public int challenges_completed;
+    public boolean game_completed;
     public float win_lose_ratio;
     public float tilt_coefficient;
     public float stop_coefficient;
@@ -49,20 +46,14 @@ public class PlayerProfile implements BroadCastResponse {
         total_amount_health_lost = 0;
         total_amount_health_received = 0;
         total_air_time = 0.0f; 
-        challenges_completed = 0;
+        game_completed = false;
         win_lose_ratio = 0.0f;
         tilt_coefficient = 0.25f;
         stop_coefficient = 0.5f;
         isZero = 0.05f;
         max_health = 3;
         
-        MessageCenter.GetInstance().addBroadCastResponse(this, GameBroadCast.BroadCastType.GOOGLE_PLAY_FAILURE);
-        MessageCenter.GetInstance().addBroadCastResponse(this, GameBroadCast.BroadCastType.GOOGLE_PLAY_SUCCESS);
     
     }
-
-    public void Response(GameBroadCast broadCast) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+ 
 }

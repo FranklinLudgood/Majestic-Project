@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nifty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+    <useControls filename="nifty-default-controls.xml"/>
+    <useStyles filename="nifty-default-styles.xml"/>
+    <screen id="SettingsScreen" controller="InterfaceController.SettingsScreenController">
+        <layer id="GLayer0" childLayout="absolute">
+            <panel id="SettingsPanel" height="100%" backgroundColor="#00008b" width="45%" childLayout="absolute" y="0%" x="55.0%">
+                <control name="label" id="settingsLabel" text="Profile Settings!" align="center" valign="center"/>
+            </panel>
+        </layer>
+    </screen>
+</nifty>

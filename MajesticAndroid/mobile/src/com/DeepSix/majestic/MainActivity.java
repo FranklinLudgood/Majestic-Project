@@ -30,7 +30,8 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import java.io.IOException;
 import android.util.Log;
-import MessageSystem.GameBroadCast;
+import GameObjects.PlayerProfile;
+import GameObjects.LevelManager;
 
  
 public class MainActivity extends AndroidHarness implements SensorEventListener, OnCancelListener, GooglePlayInterface{
@@ -206,8 +207,7 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
                  new AuthorizationTask().execute(accountName);
               } else if(resultCode == RESULT_CANCELED){
                   Toast.makeText(this, "You must log onto Google Play to play Majestic", Toast.LENGTH_SHORT).show();
-                   GameBroadCast cast = new GameBroadCast(null, null, GameBroadCast.BroadCastType.GOOGLE_PLAY_FAILURE);
-                MessageCenter.GetInstance().SendBroadCast(cast);
+                   
               }
               break;
               
@@ -257,8 +257,8 @@ public class MainActivity extends AndroidHarness implements SensorEventListener,
         protected void onPostExecute(String result){
              if (result != null) {
                 prefrences.edit().putString(PREFS_AUTH_TOKEN, result).apply();
-                GameBroadCast cast = new GameBroadCast(null, null, GameBroadCast.BroadCastType.GOOGLE_PLAY_SUCESS);
-                MessageCenter.GetInstance().SendBroadCast(cast);
+                PlayerProfile.GetInstance().Name = prefrences.getString(PREFS_SELECTED_ACCOUNT, null);
+                LevelManager.GetInstance().getNiftyJmeDisplay().getNifty().gotoScreen("OutOfGameScreen");
             }
         }
     }

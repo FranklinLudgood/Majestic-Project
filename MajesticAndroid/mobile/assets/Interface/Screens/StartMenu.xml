@@ -8,9 +8,6 @@
                 <control name="button" id="start" height="15.0%" width="90.0%" label="Begin" childLayout="center" y="30%" x="5.0%">
                     <interact onClick="startButton()" />
                 </control>
-                <control name="button" id="credits" height="15.0%" width="90.0%" label="Credits" childLayout="center" y="65.0%" x="5.0%">
-                   
-                </control>
                  <effect>          
                     <onStartSceeen name="fade" length="10000"/>        
                  </effect> 
