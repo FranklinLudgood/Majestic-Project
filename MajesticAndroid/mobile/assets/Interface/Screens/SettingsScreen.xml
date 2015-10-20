@@ -5,7 +5,7 @@
     <screen id="SettingsScreen" controller="InterfaceController.SettingsScreenController">
         <layer id="GLayer0" childLayout="absolute">
             <panel id="SettingsPanel" height="100%" backgroundColor="#00008b" width="45%" childLayout="absolute" y="0%" x="55.0%">
-                <control name="label" id="settingsLabel" text="Profile Settings!" align="center" valign="center"/>
+                <control name="label" id="TitleLabel" text="Profile Settings" height="5.0%" style="nifty-label" font="aurulent-sans-16.fnt" width="50.%" y="5.0%" x="0.0%"/>
             </panel>
         </layer>
     </screen>

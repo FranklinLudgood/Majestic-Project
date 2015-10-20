@@ -5,7 +5,15 @@
     <screen id="SettingsScreen" controller="InterfaceController.SettingsScreenController">
         <layer id="GLayer0" childLayout="absolute">
             <panel id="SettingsPanel" height="100%" backgroundColor="#00008b" width="45%" childLayout="absolute" y="0%" x="55.0%">
-                <control name="label" id="settingsLabel" text="Profile Settings!" align="center" valign="center"/>
+                <control name="label" id="TitleLabel" text="Profile Settings" height="5.0%" style="nifty-label" font="aurulent-sans-16.fnt" width="50.%" y="5.0%" x="30.0%"/>
+                <control name="verticalSlider" id="TiltVSlider" height="40.0%" width="5.0%" y="10.0%" x="10.0%"/>
+                <control name="verticalSlider" id="StopVSlider" height="40.0%" width="5.0%" y="10.0%" x="45.0%"/>
+                <control name="verticalSlider" id="ZeroVSlider" height="40.0%" width="5.0%" y="10.0%" x="85.0%"/>
+                <control name="button" id="save" height="15.0%" width="30.0%" label="Save" childLayout="center" y="65.0%" x="10.0%"/>
+                <control name="button" id="exit" height="15.0%" width="30.0%" label="Exit!" childLayout="center" y="65.0%" x="60.0%"/>
+                <control name="label" id="TiltLabel" text="Tilt Control" height="5.0%" font="aurulent-sans-16.fnt" width="20.0%" y="50.0%" x="2.0%"/>
+                <control name="label" id="StopLabel" text="Stop Coefficent" height="5.0%" font="aurulent-sans-16.fnt" width="30.0%" y="50.0%" x="35.0%"/>
+                <control name="label" id="ZeroLabel" text="Is Zero" height="5.0%" font="aurulent-sans-16.fnt" width="15.0%" y="50.0%" x="81.0%"/>
             </panel>
         </layer>
     </screen>

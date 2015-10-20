@@ -17,7 +17,8 @@
                 <control name="button" id="settings" height="20.0%" width="40.0%" label="Profile Settings" childLayout="center" y="5.0%" x="5.0%">
                     <interact onClick="settingsButton()" />
                 </control>
-                <control name="button" id="play" height="20.0%" width="40.0%" label="Play!" childLayout="center" y="5.0%" x="55.0%"/>
+                <control name="button" id="play" height="20.0%" width="40.0%" label="Play!" childLayout="center" y="5.0%" x="55.0%> 
+                </control>
                 <control name="button" id="loadProfile" height="20.0%" width="40.0%" label="Load new Profile" childLayout="center" y="55.0%" x="30.0%">
                     <interact onClick="loadProfileButton()" />
                 </control>
